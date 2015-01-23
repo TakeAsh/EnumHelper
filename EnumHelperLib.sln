@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumHelperLib", "EnumHelperLib\EnumHelperLib.csproj", "{350A3E35-55C2-46C4-A393-F5A1FE5D0DE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumHelperLib_Test", "EnumHelperLib_Test\EnumHelperLib_Test.csproj", "{846B66E7-03A5-497C-A233-3BB045EFBEFD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{350A3E35-55C2-46C4-A393-F5A1FE5D0DE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{350A3E35-55C2-46C4-A393-F5A1FE5D0DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{350A3E35-55C2-46C4-A393-F5A1FE5D0DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{350A3E35-55C2-46C4-A393-F5A1FE5D0DE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{846B66E7-03A5-497C-A233-3BB045EFBEFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{846B66E7-03A5-497C-A233-3BB045EFBEFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{846B66E7-03A5-497C-A233-3BB045EFBEFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{846B66E7-03A5-497C-A233-3BB045EFBEFD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
