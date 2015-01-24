@@ -19,9 +19,9 @@ namespace TakeAsh {
             public TEnum Value { get; private set; }
             public string Description { get; private set; }
 
-            public ValueDescriptionPair(TEnum Value, string Description) {
-                this.Value = Value;
-                this.Description = Description;
+            public ValueDescriptionPair(TEnum value, string description) {
+                this.Value = value;
+                this.Description = description;
             }
 
             public override string ToString() {
@@ -72,8 +72,8 @@ namespace TakeAsh {
                 default(TEnum);
         }
 
-        static public TEnum GetValueFromDescription(string name) {
-            var index = Array.IndexOf(_descriptions, name);
+        static public TEnum GetValueFromDescription(string description) {
+            var index = Array.IndexOf(_descriptions, description);
             return index >= 0 ?
                 _values[index] :
                 default(TEnum);
