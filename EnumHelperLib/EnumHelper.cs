@@ -15,19 +15,38 @@ namespace TakeAsh {
     static public class EnumHelper<TEnum>
         where TEnum : struct, IConvertible {
 
+        public class ValueDescriptionPair {
+            public TEnum Value { get; private set; }
+            public string Description { get; private set; }
+
+            public ValueDescriptionPair(TEnum Value, string Description) {
+                this.Value = Value;
+                this.Description = Description;
+            }
+
+            public override string ToString() {
+                return Description;
+            }
+        }
+
         static private TEnum[] _values;
         static private string[] _names;
         static private string[] _descriptions;
+        static private ValueDescriptionPair[] _valueDescriptionPairs;
 
         static EnumHelper() {
             _values = (TEnum[])Enum.GetValues(typeof(TEnum));
             _names = Enum.GetNames(typeof(TEnum));
 
             var descriptions = new List<string>();
+            var valueDescriptionPairs = new List<ValueDescriptionPair>();
             foreach (var item in _values) {
-                descriptions.Add(ToDescription(item));
+                var description = ToDescription(item);
+                descriptions.Add(description);
+                valueDescriptionPairs.Add(new ValueDescriptionPair(item, description));
             }
             _descriptions = descriptions.ToArray();
+            _valueDescriptionPairs = valueDescriptionPairs.ToArray();
         }
 
         static public TEnum[] Values {
@@ -40,6 +59,10 @@ namespace TakeAsh {
 
         static public string[] Descriptions {
             get { return _descriptions; }
+        }
+
+        static public ValueDescriptionPair[] ValueDescriptionPairs {
+            get { return _valueDescriptionPairs; }
         }
 
         static public TEnum GetValueFromName(string name) {
