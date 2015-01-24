@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumHelperLib", "EnumHelper
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumHelperLib_Test", "EnumHelperLib_Test\EnumHelperLib_Test.csproj", "{846B66E7-03A5-497C-A233-3BB045EFBEFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumHelperLib_Call", "EnumHelperLib_Call\EnumHelperLib_Call.csproj", "{6F195F60-6377-4421-A8D4-A0235153453D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{846B66E7-03A5-497C-A233-3BB045EFBEFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{846B66E7-03A5-497C-A233-3BB045EFBEFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{846B66E7-03A5-497C-A233-3BB045EFBEFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F195F60-6377-4421-A8D4-A0235153453D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F195F60-6377-4421-A8D4-A0235153453D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F195F60-6377-4421-A8D4-A0235153453D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F195F60-6377-4421-A8D4-A0235153453D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
