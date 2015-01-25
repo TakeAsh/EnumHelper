@@ -64,6 +64,20 @@ namespace EnumExtensionLib_Test {
             );
         }
 
+        [TestCase]
+        public void ValueDescriptionPairs_Test() {
+            var expected = new NewLineCodeHelper.ValueDescriptionPair[]{
+                new NewLineCodeHelper.ValueDescriptionPair(NewLineCode.Lf, "Unix(LF)"),
+                new NewLineCodeHelper.ValueDescriptionPair(NewLineCode.Cr, "Mac(CR)"),
+                new NewLineCodeHelper.ValueDescriptionPair(NewLineCode.CrLf, "Windows(CR+LF)"),
+                new NewLineCodeHelper.ValueDescriptionPair(NewLineCode.LfCr, "LfCr"),
+            };
+            CollectionAssert.AreEqual(
+                expected,
+                NewLineCodeHelper.ValueDescriptionPairs
+            );
+        }
+
         [TestCase("Lf", NewLineCode.Lf)]
         [TestCase("Cr", NewLineCode.Cr)]
         [TestCase("CrLf", NewLineCode.CrLf)]

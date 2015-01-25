@@ -15,7 +15,8 @@ namespace TakeAsh {
     static public class EnumHelper<TEnum>
         where TEnum : struct, IConvertible {
 
-        public class ValueDescriptionPair {
+        public class ValueDescriptionPair :
+            IEquatable<ValueDescriptionPair> {
             public TEnum Value { get; private set; }
             public string Description { get; private set; }
 
@@ -27,6 +28,39 @@ namespace TakeAsh {
             public override string ToString() {
                 return Description;
             }
+
+            #region IEquatable members
+
+            public bool Equals(ValueDescriptionPair other) {
+                if (other == null) {
+                    return false;
+                }
+                return this.Value.Equals(other.Value) && this.Description == other.Description;
+            }
+
+            public override bool Equals(object obj) {
+                if (obj == null) {
+                    return false;
+                }
+                return Equals(obj as ValueDescriptionPair);
+            }
+
+            public override int GetHashCode() {
+                return Value.GetHashCode() ^ Description.GetHashCode();
+            }
+
+            static public bool operator ==(ValueDescriptionPair a, ValueDescriptionPair b) {
+                if ((object)a == null || (object)b == null) {
+                    return Object.Equals(a, b);
+                }
+                return a.Equals(b);
+            }
+
+            static public bool operator !=(ValueDescriptionPair a, ValueDescriptionPair b) {
+                return !(a == b);
+            }
+
+            #endregion
         }
 
         static private TEnum[] _values;
