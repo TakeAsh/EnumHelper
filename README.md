@@ -24,6 +24,7 @@ public enum NewLineCodes {
 ### Binding an enum with description to ComboBox
 ```csharp
 comboBox_NewLineCode_GalleryCategory.ItemsSource = NewLineCodesHelper.ValueDescriptionPairs;
+comboBox_NewLineCode_Gallery.SelectedValuePath="Value";
 comboBox_NewLineCode_Gallery.SelectedValue = NewLineCodes.CrLf;
 
 var newLineCode = (NewLineCodes)comboBox_NewLineCode_Gallery.SelectedValue;
