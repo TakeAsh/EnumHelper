@@ -11,11 +11,8 @@ namespace EnumHelperLib_Call {
     public class Options {
 
         public enum NewLineCodes {
-            [Description("Unix(LF)")]
             Lf,
-            [Description("Mac(CR)")]
             Cr,
-            [Description("Windows(CR+LF)")]
             CrLf,
         }
 

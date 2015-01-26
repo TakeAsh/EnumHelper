@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NewLineCodes_Cr" xml:space="preserve">
-    <value>Mac (CR)</value>
+    <value>マック(CR)</value>
   </data>
   <data name="NewLineCodes_CrLf" xml:space="preserve">
-    <value>Windows (CR+LF)</value>
+    <value>ウィンドウズ(CR+LF)</value>
   </data>
   <data name="NewLineCodes_Lf" xml:space="preserve">
-    <value>Unix (LF)</value>
+    <value>ユニックス(LF)</value>
   </data>
 </root>

@@ -17,6 +17,16 @@
             </r:Ribbon.ApplicationMenu>
 
             <r:RibbonTab Header="Home">
+                <r:RibbonGroup Header="Language">
+                    <r:RibbonComboBox x:Name="comboBox_Language" ToolTip="Language">
+                        <r:RibbonGallery x:Name="comboBox_Language_Gallery"
+                            SelectedValuePath="Name"
+                            SelectionChanged="comboBox_Language_Gallery_SelectionChanged">
+                            <r:RibbonGalleryCategory x:Name="comboBox_Language_GalleryCategory"
+                                DisplayMemberPath="DisplayName" />
+                        </r:RibbonGallery>
+                    </r:RibbonComboBox>
+                </r:RibbonGroup>
                 <r:RibbonGroup Header="Options">
                     <r:RibbonComboBox x:Name="comboBox_NewLineCode" ToolTip="NewLineCode">
                         <r:RibbonGallery x:Name="comboBox_NewLineCode_Gallery"
