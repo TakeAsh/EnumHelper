@@ -13,8 +13,8 @@ namespace TakeAsh {
     /// </summary>
     /// <typeparam name="TEnum">Enum type</typeparam>
     /// <remarks>
-    /// C# の enum に関連する小技。 - Qiita
-    /// http://qiita.com/hugo-sb/items/38fe86a09e8e0865d471
+    /// <term>C# の enum に関連する小技。 - Qiita</term>
+    /// <description>http://qiita.com/hugo-sb/items/38fe86a09e8e0865d471</description>
     /// </remarks>
     static public class EnumHelper<TEnum>
         where TEnum : struct, IConvertible {
@@ -81,14 +81,32 @@ namespace TakeAsh {
             _names = Enum.GetNames(typeof(TEnum));
         }
 
+        /// <summary>
+        /// List of TEnum values
+        /// </summary>
         static public TEnum[] Values {
             get { return _values; }
         }
 
+        /// <summary>
+        /// List of TEnum item names
+        /// </summary>
         static public string[] Names {
             get { return _names; }
         }
 
+        /// <summary>
+        /// List of TEnum item descriptions
+        /// </summary>
+        /// <remarks>
+        /// TEnum item description come from:
+        /// <list type="number">
+        /// <item>localized resources (TEnumType_ItemName)</item>
+        /// <item>default resources (TEnumType_ItemName)</item>
+        /// <item>Description attribute (System.ComponentModel)</item>
+        /// <item>TEnum item name</item>
+        /// </list>
+        /// </remarks>
         static public string[] Descriptions {
             get {
                 if (_descriptions != null) {
@@ -105,6 +123,9 @@ namespace TakeAsh {
             }
         }
 
+        /// <summary>
+        /// List of TEnum value and its description pair
+        /// </summary>
         static public ValueDescriptionPair[] ValueDescriptionPairs {
             get {
                 if (_valueDescriptionPairs != null) {
@@ -121,12 +142,28 @@ namespace TakeAsh {
             }
         }
 
+        /// <summary>
+        /// Initialize cache
+        /// </summary>
+        /// <attention>
+        /// You MUST call Init() after changing CurrentCulture.
+        /// </attention>
         static public void Init() {
             _descriptions = null;
             _valueDescriptionPairs = null;
             _resMan = null;
         }
 
+        /// <summary>
+        /// Returns TEnum value from name
+        /// </summary>
+        /// <param name="name">TEnum name</param>
+        /// <returns>
+        /// <list type="table">
+        /// <item><term>TEnum value</term><description>when it is found.</description></item>
+        /// <item><term>TEnum default value</term><description>when it is not found.</description></item>
+        /// </list>
+        /// </returns>
         static public TEnum GetValueFromName(string name) {
             var index = Array.IndexOf(_names, name);
             return index >= 0 ?
@@ -134,6 +171,16 @@ namespace TakeAsh {
                 default(TEnum);
         }
 
+        /// <summary>
+        /// Returns TEnum value from description
+        /// </summary>
+        /// <param name="description">TEnum description</param>
+        /// <returns>
+        /// <list type="table">
+        /// <item><term>TEnum value</term><description>when it is found.</description></item>
+        /// <item><term>TEnum default value</term><description>when it is not found.</description></item>
+        /// </list>
+        /// </returns>
         static public TEnum GetValueFromDescription(string description) {
             var index = Array.IndexOf(Descriptions, description);
             return index >= 0 ?
@@ -141,10 +188,34 @@ namespace TakeAsh {
                 default(TEnum);
         }
 
+        /// <summary>
+        /// Returns an indication whether a constant exists in TEnum.
+        /// </summary>
+        /// <param name="value">The value of a constant in TEnum.</param>
+        /// <returns>
+        /// <list type="table">
+        /// <item><term>true</term><description>if a constant in TEnum has a value equal to value</description></item>
+        /// <item><term>false</term><description>if a constant in TEnum doesn't have a value equal to value</description></item>
+        /// </list>
+        /// </returns>
         static public bool IsDefined(int value) {
             return Enum.IsDefined(typeof(TEnum), value);
         }
 
+        /// <summary>
+        /// Returns TEnum item description
+        /// </summary>
+        /// <param name="en">TEnum value</param>
+        /// <returns>TEnum item description</returns>
+        /// <remarks>
+        /// TEnum item description come from:
+        /// <list type="number">
+        /// <item>localized resources (TEnumType_ItemName)</item>
+        /// <item>default resources (TEnumType_ItemName)</item>
+        /// <item>Description attribute (System.ComponentModel)</item>
+        /// <item>TEnum item name</item>
+        /// </list>
+        /// </remarks>
         static public string ToDescription(TEnum en) {
             if (_ResourceManager == null) {
                 return _ToDescription(en);
@@ -156,6 +227,13 @@ namespace TakeAsh {
                 _ToDescription(en);
         }
 
+        /// <summary>
+        /// Returns Assembly name
+        /// </summary>
+        /// <returns>Assembly name</returns>
+        /// <remarks>
+        /// For debug
+        /// </remarks>
         static public string GetAssemblyName() {
             var assembly = Assembly.GetEntryAssembly();
             return assembly != null ?
@@ -181,6 +259,18 @@ namespace TakeAsh {
             }
         }
 
+        /// <summary>
+        /// Returns TEnum item description
+        /// </summary>
+        /// <param name="en">TEnum value</param>
+        /// <returns>TEnum item description</returns>
+        /// <remarks>
+        /// TEnum item description come from:
+        /// <list type="number">
+        /// <item>Description attribute (System.ComponentModel)</item>
+        /// <item>TEnum item name</item>
+        /// </list>
+        /// </remarks>
         static private string _ToDescription(TEnum en) {
             var memInfos = typeof(TEnum).GetMember(en.ToString());
             if (memInfos == null || memInfos.Length == 0) {
@@ -200,12 +290,12 @@ namespace TakeAsh {
     /// <remarks>
     /// <list type="bullet">
     /// <item>
-    /// C# 3.0 : using extension methods for enum ToString
-    /// http://blogs.msdn.com/b/abhinaba/archive/2005/10/21/483337.aspx
+    /// <term>C# 3.0 : using extension methods for enum ToString</term>
+    /// <description>http://blogs.msdn.com/b/abhinaba/archive/2005/10/21/483337.aspx</description>
     /// </item>
     /// <item>
-    /// [C#] 何故 enum に拘りたくなるのか？ - Moonmile Solutions Blog
-    /// http://www.moonmile.net/blog/archives/3666
+    /// <term>[C#] 何故 enum に拘りたくなるのか？ - Moonmile Solutions Blog</term>
+    /// <description>http://www.moonmile.net/blog/archives/3666</description>
     /// </item>
     /// </list>
     /// </remarks>
@@ -214,6 +304,20 @@ namespace TakeAsh {
         static private Regex regPropertyResources = new Regex(@"\.Properties\.");
         static private Regex regLastResources = new Regex(@"\.resources$");
 
+        /// <summary>
+        /// Returns Enum items description
+        /// </summary>
+        /// <param name="en">Enum item</param>
+        /// <returns>Enum items description</returns>
+        /// <remarks>
+        /// Enum items description come from:
+        /// <list type="number">
+        /// <item>localized resources (EnumType_ItemName)</item>
+        /// <item>default resources (EnumType_ItemName)</item>
+        /// <item>Description attribute (System.ComponentModel)</item>
+        /// <item>Enum item name</item>
+        /// </list>
+        /// </remarks>
         static public string ToDescription(this Enum en) {
             Assembly assembly;
             string[] resNames;
@@ -233,6 +337,14 @@ namespace TakeAsh {
                 en._ToDescription();
         }
 
+        /// <summary>
+        /// Gets Assembly name
+        /// </summary>
+        /// <param name="en">Enum item</param>
+        /// <returns>Assembly name</returns>
+        /// <remarks>
+        /// For debug
+        /// </remarks>
         static public string GetAssemblyName(this Enum en) {
             var assembly = Assembly.GetEntryAssembly();
             return assembly != null ?
@@ -240,6 +352,18 @@ namespace TakeAsh {
                 null;
         }
 
+        /// <summary>
+        /// Returns Enum items description
+        /// </summary>
+        /// <param name="en">Enum item</param>
+        /// <returns>Enum items description</returns>
+        /// <remarks>
+        /// Enum items description come from:
+        /// <list type="number">
+        /// <item>Description attribute (System.ComponentModel)</item>
+        /// <item>Enum item name</item>
+        /// </list>
+        /// </remarks>
         static private string _ToDescription(this Enum en) {
             var memInfos = en.GetType().GetMember(en.ToString());
             if (memInfos == null || memInfos.Length == 0) {
