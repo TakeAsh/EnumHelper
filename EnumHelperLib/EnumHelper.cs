@@ -21,7 +21,6 @@ namespace TakeAsh {
 
         static private Regex regPropertyResources = new Regex(@"\.Properties\.");
         static private Regex regLastResources = new Regex(@"\.resources$");
-        static private Regex regAssemblyName = new Regex(@"^[^\+]+\+");
 
         public class ValueDescriptionPair :
             IEquatable<ValueDescriptionPair> {
@@ -74,6 +73,7 @@ namespace TakeAsh {
         static private TEnum[] _values;
         static private string[] _names;
         static private string[] _descriptions;
+        static private ValueDescriptionPair[] _valueDescriptionPairs;
         static private ResourceManager _resMan;
 
         static EnumHelper() {
@@ -91,24 +91,40 @@ namespace TakeAsh {
 
         static public string[] Descriptions {
             get {
-                InitResourceManager();
+                if (_descriptions != null) {
+                    return _descriptions;
+                }
+                var toDescription = _ResourceManager != null ?
+                    (Func<TEnum, string>)((TEnum key) => ToDescription(key)) :
+                    (Func<TEnum, string>)((TEnum key) => _ToDescription(key));
                 var descriptions = new List<string>();
                 foreach (var item in _values) {
-                    descriptions.Add(ToLocalizedDescription(item));
+                    descriptions.Add(toDescription(item));
                 }
-                return (_descriptions = descriptions.ToArray());
+                return _descriptions = descriptions.ToArray();
             }
         }
 
         static public ValueDescriptionPair[] ValueDescriptionPairs {
             get {
-                InitResourceManager();
+                if (_valueDescriptionPairs != null) {
+                    return _valueDescriptionPairs;
+                }
+                var toDescription = _ResourceManager != null ?
+                    (Func<TEnum, string>)((key) => ToDescription(key)) :
+                    (Func<TEnum, string>)((key) => _ToDescription(key));
                 var valueDescriptionPairs = new List<ValueDescriptionPair>();
                 foreach (var item in _values) {
-                    valueDescriptionPairs.Add(new ValueDescriptionPair(item, ToLocalizedDescription(item)));
+                    valueDescriptionPairs.Add(new ValueDescriptionPair(item, toDescription(item)));
                 }
-                return valueDescriptionPairs.ToArray();
+                return _valueDescriptionPairs = valueDescriptionPairs.ToArray();
             }
+        }
+
+        static public void Init() {
+            _descriptions = null;
+            _valueDescriptionPairs = null;
+            _resMan = null;
         }
 
         static public TEnum GetValueFromName(string name) {
@@ -119,7 +135,7 @@ namespace TakeAsh {
         }
 
         static public TEnum GetValueFromDescription(string description) {
-            var index = Array.IndexOf(_descriptions, description);
+            var index = Array.IndexOf(Descriptions, description);
             return index >= 0 ?
                 _values[index] :
                 default(TEnum);
@@ -129,7 +145,43 @@ namespace TakeAsh {
             return Enum.IsDefined(typeof(TEnum), value);
         }
 
-        static private string ToDescription(TEnum en) {
+        static public string ToDescription(TEnum en) {
+            if (_ResourceManager == null) {
+                return _ToDescription(en);
+            }
+            var key = String.Format("{0}_{1}", typeof(TEnum).Name, en.ToString());
+            var localizedDescription = _resMan.GetString(key);
+            return !String.IsNullOrEmpty(localizedDescription) ?
+                localizedDescription :
+                _ToDescription(en);
+        }
+
+        static public string GetAssemblyName() {
+            var assembly = Assembly.GetEntryAssembly();
+            return assembly != null ?
+                assembly.GetName().Name :
+                null;
+        }
+
+        static private ResourceManager _ResourceManager {
+            get {
+                if (_resMan != null) {
+                    return _resMan;
+                }
+                Assembly assembly;
+                string[] resNames;
+                if ((assembly = Assembly.GetEntryAssembly()) == null ||
+                    (resNames = assembly.GetManifestResourceNames()) == null ||
+                    resNames.Length == 0 ||
+                    (resNames = resNames.Where(name => regPropertyResources.IsMatch(name)).ToArray()) == null ||
+                    resNames.Length == 0) {
+                    return null;
+                }
+                return _resMan = new ResourceManager(regLastResources.Replace(resNames[0], ""), assembly);
+            }
+        }
+
+        static private string _ToDescription(TEnum en) {
             var memInfos = typeof(TEnum).GetMember(en.ToString());
             if (memInfos == null || memInfos.Length == 0) {
                 return en.ToString();
@@ -139,32 +191,6 @@ namespace TakeAsh {
                 return en.ToString();
             }
             return ((DescriptionAttribute)attrs[0]).Description;
-        }
-
-        static public string ToLocalizedDescription(TEnum en) {
-            if (_resMan == null) {
-                return ToDescription(en);
-            }
-            var enTypeName = regAssemblyName.Replace(en.GetType().ToString(), "");
-            var key = String.Format("{0}_{1}", enTypeName, en.ToString());
-            var localizedDescription = _resMan.GetString(key);
-            return !String.IsNullOrEmpty(localizedDescription) ?
-                localizedDescription :
-                ToDescription(en);
-        }
-
-        static private void InitResourceManager() {
-            _resMan = null;
-            Assembly assembly;
-            string[] resNames;
-            if ((assembly = Assembly.GetEntryAssembly()) == null ||
-                (resNames = assembly.GetManifestResourceNames()) == null ||
-                resNames.Length == 0 ||
-                (resNames = resNames.Where(name => regPropertyResources.IsMatch(name)).ToArray()) == null ||
-                resNames.Length == 0) {
-                return;
-            }
-            _resMan = new ResourceManager(regLastResources.Replace(resNames[0], ""), assembly);
         }
     }
 
@@ -187,21 +213,8 @@ namespace TakeAsh {
 
         static private Regex regPropertyResources = new Regex(@"\.Properties\.");
         static private Regex regLastResources = new Regex(@"\.resources$");
-        static private Regex regAssemblyName = new Regex(@"^[^\+]+\+");
 
         static public string ToDescription(this Enum en) {
-            var memInfos = en.GetType().GetMember(en.ToString());
-            if (memInfos == null || memInfos.Length == 0) {
-                return en.ToString();
-            }
-            var attrs = memInfos[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-            if (attrs == null || attrs.Length == 0) {
-                return en.ToString();
-            }
-            return ((DescriptionAttribute)attrs[0]).Description;
-        }
-
-        static public string ToLocalizedDescription(this Enum en) {
             Assembly assembly;
             string[] resNames;
             ResourceManager resourceManager;
@@ -211,14 +224,32 @@ namespace TakeAsh {
                 (resNames = resNames.Where(name => regPropertyResources.IsMatch(name)).ToArray()) == null ||
                 resNames.Length == 0 ||
                 (resourceManager = new ResourceManager(regLastResources.Replace(resNames[0], ""), assembly)) == null) {
-                return en.ToDescription();
+                return en._ToDescription();
             }
-            var enTypeName = regAssemblyName.Replace(en.GetType().ToString(), "");
-            var key = String.Format("{0}_{1}", enTypeName, en.ToString());
+            var key = String.Format("{0}_{1}", en.GetType().Name, en.ToString());
             var localizedDescription = resourceManager.GetString(key);
             return !String.IsNullOrEmpty(localizedDescription) ?
                 localizedDescription :
-                en.ToDescription();
+                en._ToDescription();
+        }
+
+        static public string GetAssemblyName(this Enum en) {
+            var assembly = Assembly.GetEntryAssembly();
+            return assembly != null ?
+                assembly.GetName().Name :
+                null;
+        }
+
+        static private string _ToDescription(this Enum en) {
+            var memInfos = en.GetType().GetMember(en.ToString());
+            if (memInfos == null || memInfos.Length == 0) {
+                return en.ToString();
+            }
+            var attrs = memInfos[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+            if (attrs == null || attrs.Length == 0) {
+                return en.ToString();
+            }
+            return ((DescriptionAttribute)attrs[0]).Description;
         }
     }
 }
