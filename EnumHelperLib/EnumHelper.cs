@@ -101,8 +101,8 @@ namespace TakeAsh {
         /// <remarks>
         /// TEnum item description come from:
         /// <list type="number">
-        /// <item>localized resources (TEnumType_ItemName)</item>
-        /// <item>default resources (TEnumType_ItemName)</item>
+        /// <item>localized resource (TEnumType_ItemName)</item>
+        /// <item>default resource (TEnumType_ItemName)</item>
         /// <item>Description attribute (System.ComponentModel)</item>
         /// <item>TEnum item name</item>
         /// </list>
@@ -210,8 +210,8 @@ namespace TakeAsh {
         /// <remarks>
         /// TEnum item description come from:
         /// <list type="number">
-        /// <item>localized resources (TEnumType_ItemName)</item>
-        /// <item>default resources (TEnumType_ItemName)</item>
+        /// <item>localized resource (TEnumType_ItemName)</item>
+        /// <item>default resource (TEnumType_ItemName)</item>
         /// <item>Description attribute (System.ComponentModel)</item>
         /// <item>TEnum item name</item>
         /// </list>
@@ -305,15 +305,15 @@ namespace TakeAsh {
         static private Regex regLastResources = new Regex(@"\.resources$");
 
         /// <summary>
-        /// Returns Enum items description
+        /// Returns Enum item description
         /// </summary>
         /// <param name="en">Enum item</param>
-        /// <returns>Enum items description</returns>
+        /// <returns>Enum item description</returns>
         /// <remarks>
-        /// Enum items description come from:
+        /// Enum item description come from:
         /// <list type="number">
-        /// <item>localized resources (EnumType_ItemName)</item>
-        /// <item>default resources (EnumType_ItemName)</item>
+        /// <item>localized resource (EnumType_ItemName)</item>
+        /// <item>default resource (EnumType_ItemName)</item>
         /// <item>Description attribute (System.ComponentModel)</item>
         /// <item>Enum item name</item>
         /// </list>
@@ -353,12 +353,12 @@ namespace TakeAsh {
         }
 
         /// <summary>
-        /// Returns Enum items description
+        /// Returns Enum item description
         /// </summary>
         /// <param name="en">Enum item</param>
-        /// <returns>Enum items description</returns>
+        /// <returns>Enum item description</returns>
         /// <remarks>
-        /// Enum items description come from:
+        /// Enum item description come from:
         /// <list type="number">
         /// <item>Description attribute (System.ComponentModel)</item>
         /// <item>Enum item name</item>
