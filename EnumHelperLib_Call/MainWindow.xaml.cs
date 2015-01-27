@@ -57,8 +57,10 @@ namespace EnumHelperLib_Call {
             if (String.IsNullOrEmpty(cultureName)) {
                 return;
             }
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(cultureName);
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureName);
+            var culture = new CultureInfo(cultureName);
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+            NewLineCodesHelper.Init();
             initDialog();
         }
 
