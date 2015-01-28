@@ -27,23 +27,11 @@ namespace EnumHelperLib_Call {
             Semicolon,
         }
 
-        [XmlIgnore]
+        [XmlAttribute]
         public NewLineCodes NewLineCode { get; set; }
 
-        [XmlAttribute("NewLineCode")]
-        public string NewLineCodeAttribute {
-            get { return NewLineCode.ToString(); }
-            set { NewLineCode = NewLineCodesHelper.GetValueFromName(value); }
-        }
-
-        [XmlIgnore]
+        [XmlAttribute]
         public Separators Separator { get; set; }
-
-        [XmlAttribute("Separator")]
-        public string SeparatorAttribute {
-            get { return Separator.ToString(); }
-            set { Separator = SeparatorsHelper.GetValueFromName(value); }
-        }
 
         public string ToXml() {
             return XmlHelper<Options>.convertToString(this);
