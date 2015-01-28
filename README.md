@@ -1,7 +1,5 @@
-﻿# Enum Helper class
-- It helps:
-  - binding an enum with description to ComboBox
-  - XML serializing an enum as attribute
+﻿# Enum Helper Class
+- It helps binding an enum with description to ComboBox.
 - Enum item description come from:
   1. localized resource (EnumType_ItemName)
   1. default resource (EnumType_ItemName)
@@ -34,25 +32,10 @@ string NewLineCodes_CrLf = "Windows(CR+LF)";
 ### Binding an enum with description to ComboBox
 ```csharp
 comboBox_NewLineCode_GalleryCategory.ItemsSource = NewLineCodesHelper.ValueDescriptionPairs;
-comboBox_NewLineCode_Gallery.SelectedValuePath="Value";
+comboBox_NewLineCode_Gallery.SelectedValuePath = "Value";
 comboBox_NewLineCode_Gallery.SelectedValue = NewLineCodes.CrLf;
 
 var newLineCode = (NewLineCodes)comboBox_NewLineCode_Gallery.SelectedValue;
-```
-
-### XML serializing an enum as attribute
-```csharp
-using System.Xml;
-using System.Xml.Serialization;
-
-[XmlIgnore]
-public NewLineCodes NewLineCode { get; set; }
-
-[XmlAttribute("NewLineCode")]
-public string NewLineCodeAttribute {
-  get { return NewLineCode.ToString(); }
-  set { NewLineCode = NewLineCodesHelper.GetValueFromName(value); }
-}
 ```
 
 ## Public Member Functions
