@@ -43,6 +43,7 @@ var newLineCode = (NewLineCodes)comboBox_NewLineCode_Gallery.SelectedValue;
 - TEnum GetValueFromName(string name)
 - TEnum GetValueFromDescription(string description)
 - bool IsDefined(int value)
+- bool TryParse (string value, out TEnum result)
 - string ToDescription(TEnum en)
 - string GetAssemblyName()
 
