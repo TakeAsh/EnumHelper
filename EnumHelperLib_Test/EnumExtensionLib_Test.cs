@@ -133,6 +133,7 @@ namespace EnumExtensionLib_Test {
         [TestCase("CrLf", NewLineCodes.CrLf)]
         [TestCase("LfCr", NewLineCodes.LfCr)]
         [TestCase(null, default(NewLineCodes))]
+        [TestCase("", default(NewLineCodes))]
         [TestCase("Undefined", default(NewLineCodes))]
         public void GetValueFromName_Test(string name, NewLineCodes expected) {
             Assert.AreEqual(
@@ -146,12 +147,14 @@ namespace EnumExtensionLib_Test {
         [TestCase("en-US", "[A] Windows(CR+LF)", NewLineCodes.CrLf)]
         [TestCase("en-US", "LfCr", NewLineCodes.LfCr)]
         [TestCase("en-US", null, default(NewLineCodes))]
+        [TestCase("en-US", "", default(NewLineCodes))]
         [TestCase("en-US", "Undefined", default(NewLineCodes))]
         [TestCase("ja-JP", "[R_ja] ユニックス(LF)", NewLineCodes.Lf)]
         [TestCase("ja-JP", "[R_en] Mac(CR)", NewLineCodes.Cr)]
         [TestCase("ja-JP", "[R_ja] ウィンドウズ(CR+LF)", NewLineCodes.CrLf)]
         [TestCase("ja-JP", "LfCr", NewLineCodes.LfCr)]
         [TestCase("ja-JP", null, default(NewLineCodes))]
+        [TestCase("ja-JP", "", default(NewLineCodes))]
         [TestCase("ja-JP", "Undefined", default(NewLineCodes))]
         public void GetValueFromDescription_Test(string culture, string description, NewLineCodes expected) {
             if (!String.IsNullOrEmpty(culture)) {
@@ -169,12 +172,38 @@ namespace EnumExtensionLib_Test {
         [TestCase(8, "LfCr", true)]
         [TestCase(0, "Undefined", false)]
         [TestCase(3, "Undefined", false)]
-        public void IsDefined_Test(int value, string message, bool expected) {
+        [TestCase("Lf", "Lf", true)]
+        [TestCase("Cr", "Cr", true)]
+        [TestCase("CrLf", "CrLf", true)]
+        [TestCase("LfCr", "LfCr", true)]
+        [TestCase(null, "Null", false)]
+        [TestCase("", "Blank", false)]
+        [TestCase("Undefined", "Undefined", false)]
+        public void IsDefined_Test(object value, string message, bool expected) {
             Assert.AreEqual(
                 expected,
                 NewLineCodeHelper.IsDefined(value),
                 String.Format("{0}: {1}", value, message)
             );
+        }
+
+        [TestCase("Lf", true, NewLineCodes.Lf)]
+        [TestCase("Cr", true, NewLineCodes.Cr)]
+        [TestCase("CrLf", true, NewLineCodes.CrLf)]
+        [TestCase("LfCr", true, NewLineCodes.LfCr)]
+        [TestCase("1", true, NewLineCodes.Lf)]
+        [TestCase("2", true, NewLineCodes.Cr)]
+        [TestCase("4", true, NewLineCodes.CrLf)]
+        [TestCase("8", true, NewLineCodes.LfCr)]
+        [TestCase(null, false, default(NewLineCodes))]
+        [TestCase("", false, default(NewLineCodes))]
+        [TestCase("Undefined", false, default(NewLineCodes))]
+        public void TryParse_Test(string value, bool expectedReturn, NewLineCodes expectedResult) {
+            NewLineCodes actualResult;
+            Assert.AreEqual(expectedReturn, NewLineCodeHelper.TryParse(value, out actualResult));
+            if (expectedReturn) {
+                Assert.AreEqual(expectedResult, actualResult);
+            }
         }
 
         public struct ToDescription_TestCase {
