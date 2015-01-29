@@ -170,6 +170,16 @@ namespace EnumExtensionLib_Test {
             );
         }
 
+        [TestCase("Entity", "\n//\r//\r\n//\n\r")]
+        [TestCase("Escaped", "\"\'\t//\'\"//あ//\uD842\uDFB7")]
+        public void GetExtraProperties_Test(string key, string properties) {
+            var expected = properties.Split(new string[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
+            CollectionAssert.AreEqual(
+                expected,
+                NewLineCodeHelper.GetAllExtraProperties(key)
+            );
+        }
+
         [TestCase(1, "Lf", true)]
         [TestCase(2, "Cr", true)]
         [TestCase(4, "CrLf", true)]

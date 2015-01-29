@@ -189,6 +189,19 @@ namespace TakeAsh {
         }
 
         /// <summary>
+        /// Returns the ExtraProperty values for all TEnum items
+        /// </summary>
+        /// <param name="key">ExtraProperty key</param>
+        /// <returns>The ExtraProperty values</returns>
+        static public string[] GetAllExtraProperties(string key) {
+            var properties = new List<string>();
+            foreach (var item in _values) {
+                properties.Add(_GetExtraProperty(item, key));
+            }
+            return properties.ToArray();
+        }
+
+        /// <summary>
         /// Returns an indication whether a constant exists in TEnum.
         /// </summary>
         /// <param name="value">The value of a constant in TEnum.</param>
@@ -298,6 +311,19 @@ namespace TakeAsh {
             return descriptionAttribute != null ?
                 descriptionAttribute.Description :
                 en.ToString();
+        }
+
+        /// <summary>
+        /// Returns the ExtraProperty value of a specific TEnum item
+        /// </summary>
+        /// <param name="en">TEnum item</param>
+        /// <param name="key">ExtraProperty key</param>
+        /// <returns>ExtraProperty value</returns>
+        static private string _GetExtraProperty(TEnum en, string key) {
+            var extraPropertiesAttribute = AttributeHelper<ExtraPropertiesAttribute>.GetAttribute(en);
+            return extraPropertiesAttribute != null ?
+                extraPropertiesAttribute[key] :
+                null;
         }
     }
 
