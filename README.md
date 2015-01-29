@@ -5,6 +5,8 @@
   1. default resource (EnumType_ItemName)
   1. Description attribute (System.ComponentModel)
   1. Enum item name
+- ExtraProperties attribute attaches a Dictionary&lt;string, string&gt;.
+- GetExtraProperty extension method returns the value from the dictionary.
 
 ## Usage Sample
 ### Definition
@@ -15,10 +17,13 @@ using TakeAsh;
 using NewLineCodesHelper = EnumHelper<NewLineCodes>;
 
 public enum NewLineCodes {
+  [ExtraProperties("Entity:'\n', SecondKey:'Not Used'")]
   [Description("Unix(LF)")]
   Lf,
+  [ExtraProperties("Entity : \"\r\"")]
   [Description("Mac(CR)")]
   Cr,
+  [ExtraProperties("Entity:\t'\r\n'")]
   [Description("Windows(CR+LF)")]
   CrLf,
 }
@@ -36,22 +41,31 @@ comboBox_NewLineCode_Gallery.SelectedValuePath = "Value";
 comboBox_NewLineCode_Gallery.SelectedValue = NewLineCodes.CrLf;
 
 var newLineCode = (NewLineCodes)comboBox_NewLineCode_Gallery.SelectedValue;
+var newLineEntity = newLineCode.GetExtraProperty("Entity");
+
+var newLineEntities = NewLineCodesHelper.GetAllExtraProperties("Entity");
 ```
 
-## Public Member Functions
+## EnumHelper<TEnum> Public Methods
 - void Init()
 - TEnum GetValueFromName(string name)
 - TEnum GetValueFromDescription(string description)
+- string[] GetAllExtraProperties(string key)
 - bool IsDefined(int value)
 - bool TryParse (string value, out TEnum result)
 - string ToDescription(TEnum en)
 - string GetAssemblyName()
 
-## Public Properties
+## EnumHelper<TEnum> Public Properties
 - TEnum[] Values [get]
 - string[] Names [get]
 - string[] Descriptions [get]
 - ValueDescriptionPair[] ValueDescriptionPairs [get]
+
+## EnumExtensionMethods Public Methods
+- string ToDescription(this Enum en)
+- string GetExtraProperty(this Enum en, string key)
+- string GetAssemblyName(this Enum en)
 
 ## Link
 - [C# 3.0 : using extension methods for enum ToString - I know the answer (it's 42) - MSDN Blogs](http://blogs.msdn.com/b/abhinaba/archive/2005/10/21/483337.aspx)
