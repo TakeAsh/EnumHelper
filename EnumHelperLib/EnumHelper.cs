@@ -294,15 +294,10 @@ namespace TakeAsh {
         /// </list>
         /// </remarks>
         static private string _ToDescription(TEnum en) {
-            var memInfos = typeof(TEnum).GetMember(en.ToString());
-            if (memInfos == null || memInfos.Length == 0) {
-                return en.ToString();
-            }
-            var attrs = memInfos[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-            if (attrs == null || attrs.Length == 0) {
-                return en.ToString();
-            }
-            return ((DescriptionAttribute)attrs[0]).Description;
+            var descriptionAttribute = AttributeHelper<DescriptionAttribute>.GetAttribute(en);
+            return descriptionAttribute != null ?
+                descriptionAttribute.Description :
+                en.ToString();
         }
     }
 
@@ -387,15 +382,23 @@ namespace TakeAsh {
         /// </list>
         /// </remarks>
         static private string _ToDescription(this Enum en) {
-            var memInfos = en.GetType().GetMember(en.ToString());
-            if (memInfos == null || memInfos.Length == 0) {
-                return en.ToString();
-            }
-            var attrs = memInfos[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-            if (attrs == null || attrs.Length == 0) {
-                return en.ToString();
-            }
-            return ((DescriptionAttribute)attrs[0]).Description;
+            var descriptionAttribute = AttributeHelper<DescriptionAttribute>.GetAttribute(en);
+            return descriptionAttribute != null ?
+                descriptionAttribute.Description :
+                en.ToString();
+        }
+
+        /// <summary>
+        /// Returns extra property from ExtraPropertiesAttribute
+        /// </summary>
+        /// <param name="en">Enum item</param>
+        /// <param name="key">key of ExtraPropertiesAttribute</param>
+        /// <returns>value of ExtraPropertiesAttribute</returns>
+        static public string GetExtraProperty(this Enum en, string key) {
+            var extraPropertiesAttribute = AttributeHelper<ExtraPropertiesAttribute>.GetAttribute(en);
+            return extraPropertiesAttribute != null ?
+                extraPropertiesAttribute[key] :
+                null;
         }
     }
 }

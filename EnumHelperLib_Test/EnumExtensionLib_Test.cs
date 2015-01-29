@@ -12,14 +12,18 @@ namespace EnumExtensionLib_Test {
     using NewLineCodeHelper = EnumHelper<NewLineCodes>;
 
     public enum NewLineCodes {
+        [ExtraProperties("Entity:'\n', Escaped:'\\x22\\u0027\t'")]
         Lf = 1,
 
+        [ExtraProperties("Entity : \"\r\"Escaped : '\\x0027\\x0022'")]
         [System.ComponentModel.Description("[A] Mac(CR)")]
         Cr = 2,
 
+        [ExtraProperties("Entity:\t'\r\n';;;Escaped:\t\"\\x3042\"")] // U+3042 あ
         [System.ComponentModel.Description("[A] Windows(CR+LF)")]
         CrLf = 4,
 
+        [ExtraProperties("Entity:\n\t'\n\r'\nEscaped:\n\t'\\uD842\\uDFB7'")] // U+00020BB7 𠮷
         LfCr = 8,
     }
 
@@ -261,6 +265,31 @@ namespace EnumExtensionLib_Test {
                 SetCurrentCulture(culture);
             }
             return item.ToDescription();
+        }
+
+        [TestCase(NewLineCodes.Lf, "\n", "\"\'\t")]
+        [TestCase(NewLineCodes.Cr, "\r", "\'\"")]
+        [TestCase(NewLineCodes.CrLf, "\r\n", "あ")]
+        [TestCase(NewLineCodes.LfCr, "\n\r", "\uD842\uDFB7")]
+        [TestCase((NewLineCodes)1, "\n", "\x22\u0027\x09")]
+        [TestCase((NewLineCodes)2, "\r", "\u0027\x22")]
+        [TestCase((NewLineCodes)4, "\r\n", "\u3042")]
+        [TestCase((NewLineCodes)8, "\n\r", "\xD842\xDFB7")]
+        [TestCase((NewLineCodes)0, null, null)]
+        [TestCase((NewLineCodes)3, null, null)]
+        public void GetExtraProperty_Test(NewLineCodes item, string expectedEntity, string expectedEscaped) {
+            var actualEntity = item.GetExtraProperty("Entity");
+            if (expectedEntity != null) {
+                Assert.AreEqual(expectedEntity, actualEntity);
+            } else {
+                Assert.Null(actualEntity);
+            }
+            var actualEscaped = item.GetExtraProperty("Escaped");
+            if (expectedEscaped != null) {
+                Assert.AreEqual(expectedEscaped, actualEscaped);
+            } else {
+                Assert.Null(actualEscaped);
+            }
         }
     }
 }
