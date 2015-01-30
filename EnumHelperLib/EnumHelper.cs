@@ -26,11 +26,13 @@ namespace TakeAsh {
         static private string[] _names;
         static private string[] _descriptions;
         static private KeyValuePair<TEnum, string>[] _valueDescriptionPairs;
+        static private Dictionary<TEnum, string> _valueDescriptionDictionary;
         static private ResourceManager _resMan;
 
         static EnumHelper() {
             _values = (TEnum[])Enum.GetValues(typeof(TEnum));
             _names = Enum.GetNames(typeof(TEnum));
+            Init();
         }
 
         /// <summary>
@@ -60,38 +62,33 @@ namespace TakeAsh {
         /// </list>
         /// </remarks>
         static public string[] Descriptions {
-            get {
-                if (_descriptions != null) {
-                    return _descriptions;
-                }
-                var toDescription = _ResourceManager != null ?
-                    (Func<TEnum, string>)((TEnum key) => ToDescription(key)) :
-                    (Func<TEnum, string>)((TEnum key) => _ToDescription(key));
-                var descriptions = new List<string>();
-                foreach (var item in _values) {
-                    descriptions.Add(toDescription(item));
-                }
-                return _descriptions = descriptions.ToArray();
-            }
+            get { return _descriptions; }
         }
 
         /// <summary>
         /// List of TEnum value and its description pair
         /// </summary>
         static public KeyValuePair<TEnum, string>[] ValueDescriptionPairs {
-            get {
-                if (_valueDescriptionPairs != null) {
-                    return _valueDescriptionPairs;
-                }
-                var toDescription = _ResourceManager != null ?
-                    (Func<TEnum, string>)((key) => ToDescription(key)) :
-                    (Func<TEnum, string>)((key) => _ToDescription(key));
-                var valueDescriptionPairs = new List<KeyValuePair<TEnum, string>>();
-                foreach (var item in _values) {
-                    valueDescriptionPairs.Add(new KeyValuePair<TEnum, string>(item, toDescription(item)));
-                }
-                return _valueDescriptionPairs = valueDescriptionPairs.ToArray();
-            }
+            get { return _valueDescriptionPairs; }
+        }
+
+        /// <summary>
+        /// Returns the dictionary of TEnum item and Description.
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item>ValueDescriptionDictionary can be used as like as ToDescription().</item>
+        /// <item>
+        /// ValueDescriptionDictionary is different from ToDescription(), when TEnum item doesn't exist in TEnum.
+        /// <list type="table">
+        /// <item><term>ValueDescriptionDictionary</term><description>throw KeyNotFoundException.</description></item>
+        /// <item><term>ToDescription()</term><description>returns stringified item.</description></item>
+        /// </list>
+        /// </item>
+        /// </list>
+        /// </remarks>
+        static public Dictionary<TEnum, string> ValueDescriptionDictionary {
+            get { return _valueDescriptionDictionary; }
         }
 
         /// <summary>
@@ -101,9 +98,19 @@ namespace TakeAsh {
         /// You MUST call Init() after changing CurrentCulture.
         /// </attention>
         static public void Init() {
-            _descriptions = null;
-            _valueDescriptionPairs = null;
-            _resMan = null;
+            var toDescription = (_resMan = _GetResourceManager()) != null ?
+                (Func<TEnum, string>)((key) => ToDescription(key)) :
+                (Func<TEnum, string>)((key) => _ToDescription(key));
+            var descriptions = new List<string>();
+            var valueDescriptionPairs = new List<KeyValuePair<TEnum, string>>();
+            foreach (var item in _values) {
+                var description = toDescription(item);
+                descriptions.Add(description);
+                valueDescriptionPairs.Add(new KeyValuePair<TEnum, string>(item, description));
+            }
+            _descriptions = descriptions.ToArray();
+            _valueDescriptionPairs = valueDescriptionPairs.ToArray();
+            _valueDescriptionDictionary = valueDescriptionPairs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         /// <summary>
@@ -204,7 +211,7 @@ namespace TakeAsh {
         /// </list>
         /// </remarks>
         static public string ToDescription(TEnum en) {
-            if (_ResourceManager == null) {
+            if (_resMan == null) {
                 return _ToDescription(en);
             }
             var key = String.Format("{0}_{1}", typeof(TEnum).Name, en.ToString());
@@ -228,22 +235,17 @@ namespace TakeAsh {
                 null;
         }
 
-        static private ResourceManager _ResourceManager {
-            get {
-                if (_resMan != null) {
-                    return _resMan;
-                }
-                Assembly assembly;
-                string[] resNames;
-                if ((assembly = Assembly.GetEntryAssembly()) == null ||
-                    (resNames = assembly.GetManifestResourceNames()) == null ||
-                    resNames.Length == 0 ||
-                    (resNames = resNames.Where(name => regPropertyResources.IsMatch(name)).ToArray()) == null ||
-                    resNames.Length == 0) {
-                    return null;
-                }
-                return _resMan = new ResourceManager(regLastResources.Replace(resNames[0], ""), assembly);
+        static private ResourceManager _GetResourceManager() {
+            Assembly assembly;
+            string[] resNames;
+            if ((assembly = Assembly.GetEntryAssembly()) == null ||
+                (resNames = assembly.GetManifestResourceNames()) == null ||
+                resNames.Length == 0 ||
+                (resNames = resNames.Where(name => regPropertyResources.IsMatch(name)).ToArray()) == null ||
+                resNames.Length == 0) {
+                return null;
             }
+            return new ResourceManager(regLastResources.Replace(resNames[0], ""), assembly);
         }
 
         /// <summary>

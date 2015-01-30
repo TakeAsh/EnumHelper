@@ -223,58 +223,73 @@ namespace EnumExtensionLib_Test {
         public struct ToDescription_TestCase {
             public string Culture { get; set; }
             public NewLineCodes Item { get; set; }
+            public bool IsValid { get; set; }
             public string Expected { get; set; }
 
             public ToDescription_TestCase(
                 string culture,
                 NewLineCodes item,
+                bool isValid,
                 string expected
             ) : this() {
                 this.Culture = culture;
                 this.Item = item;
+                this.IsValid = isValid;
                 this.Expected = expected;
             }
         }
 
         public static ToDescription_TestCase[] ToDescription_TestCases = new ToDescription_TestCase[]{
-            new ToDescription_TestCase("en-US", NewLineCodes.Lf, "[R_en] Unix(LF)"),
-            new ToDescription_TestCase("en-US", NewLineCodes.Cr, "[R_en] Mac(CR)"),
-            new ToDescription_TestCase("en-US", NewLineCodes.CrLf, "[A] Windows(CR+LF)"),
-            new ToDescription_TestCase("en-US", NewLineCodes.LfCr, "LfCr"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)1, "[R_en] Unix(LF)"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)2, "[R_en] Mac(CR)"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)4, "[A] Windows(CR+LF)"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)8, "LfCr"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)0, "0"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)3, "3"),
-            new ToDescription_TestCase("ja-JP", NewLineCodes.Lf, "[R_ja] ユニックス(LF)"),
-            new ToDescription_TestCase("ja-JP", NewLineCodes.Cr, "[R_en] Mac(CR)"),
-            new ToDescription_TestCase("ja-JP", NewLineCodes.CrLf, "[R_ja] ウィンドウズ(CR+LF)"),
-            new ToDescription_TestCase("ja-JP", NewLineCodes.LfCr, "LfCr"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)1, "[R_ja] ユニックス(LF)"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)2, "[R_en] Mac(CR)"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)4, "[R_ja] ウィンドウズ(CR+LF)"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)8, "LfCr"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)0, "0"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)3, "3"),
+            new ToDescription_TestCase("en-US", NewLineCodes.Lf, true,"[R_en] Unix(LF)"),
+            new ToDescription_TestCase("en-US", NewLineCodes.Cr, true, "[R_en] Mac(CR)"),
+            new ToDescription_TestCase("en-US", NewLineCodes.CrLf, true, "[A] Windows(CR+LF)"),
+            new ToDescription_TestCase("en-US", NewLineCodes.LfCr, true, "LfCr"),
+            new ToDescription_TestCase("en-US", (NewLineCodes)1, true, "[R_en] Unix(LF)"),
+            new ToDescription_TestCase("en-US", (NewLineCodes)2, true, "[R_en] Mac(CR)"),
+            new ToDescription_TestCase("en-US", (NewLineCodes)4, true, "[A] Windows(CR+LF)"),
+            new ToDescription_TestCase("en-US", (NewLineCodes)8, true, "LfCr"),
+            new ToDescription_TestCase("en-US", (NewLineCodes)0, false, "0"),
+            new ToDescription_TestCase("en-US", (NewLineCodes)3, false, "3"),
+            new ToDescription_TestCase("ja-JP", NewLineCodes.Lf, true, "[R_ja] ユニックス(LF)"),
+            new ToDescription_TestCase("ja-JP", NewLineCodes.Cr, true, "[R_en] Mac(CR)"),
+            new ToDescription_TestCase("ja-JP", NewLineCodes.CrLf, true, "[R_ja] ウィンドウズ(CR+LF)"),
+            new ToDescription_TestCase("ja-JP", NewLineCodes.LfCr, true, "LfCr"),
+            new ToDescription_TestCase("ja-JP", (NewLineCodes)1, true, "[R_ja] ユニックス(LF)"),
+            new ToDescription_TestCase("ja-JP", (NewLineCodes)2, true, "[R_en] Mac(CR)"),
+            new ToDescription_TestCase("ja-JP", (NewLineCodes)4, true, "[R_ja] ウィンドウズ(CR+LF)"),
+            new ToDescription_TestCase("ja-JP", (NewLineCodes)8, true, "LfCr"),
+            new ToDescription_TestCase("ja-JP", (NewLineCodes)0, false, "0"),
+            new ToDescription_TestCase("ja-JP", (NewLineCodes)3, false, "3"),
         };
 
         public static class ToDescription_TestCaseProvider {
             public static IEnumerable<TestCaseData> AllTestCases {
                 get {
                     foreach (var testCase in ToDescription_TestCases) {
-                        yield return new TestCaseData(testCase.Culture, testCase.Item, testCase.Expected).Returns(testCase.Expected);
+                        yield return new TestCaseData(testCase.Culture, testCase.Item, testCase.IsValid, testCase.Expected).Returns(testCase.Expected);
                     }
                 }
             }
         }
 
         [Test, TestCaseSource(typeof(ToDescription_TestCaseProvider), "AllTestCases")]
-        public string ToDescription_Test(string culture, NewLineCodes item, string expected) {
+        public string ToDescription_Test(string culture, NewLineCodes item, bool isValid, string expected) {
             if (!String.IsNullOrEmpty(culture)) {
                 SetCurrentCulture(culture);
             }
             return item.ToDescription();
+        }
+
+        [Test, TestCaseSource(typeof(ToDescription_TestCaseProvider), "AllTestCases")]
+        public string ValueDescriptionDictionary_Test(string culture, NewLineCodes item, bool isValid, string expected) {
+            if (!String.IsNullOrEmpty(culture)) {
+                SetCurrentCulture(culture);
+            }
+            var dic = NewLineCodeHelper.ValueDescriptionDictionary;
+            Assert.AreEqual(isValid, dic.ContainsKey(item));
+            return isValid ?
+                dic[item] :
+                expected; // skip
         }
 
         [TestCase(NewLineCodes.Lf, "\n", "\"\'\t")]
