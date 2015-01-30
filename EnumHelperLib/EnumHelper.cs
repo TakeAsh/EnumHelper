@@ -167,6 +167,25 @@ namespace TakeAsh {
         }
 
         /// <summary>
+        /// Returns TEnum value from description
+        /// </summary>
+        /// <param name="description">TEnum description</param>
+        /// <returns>
+        /// <list type="table">
+        /// <item><term>TEnum value</term><description>when it is found.</description></item>
+        /// <item><term>null</term><description>when it is null, or blank, or not found.</description></item>
+        /// </list>
+        /// </returns>
+        static public Nullable<TEnum> GetValueNullableFromDescription(string description) {
+            var index = Array.IndexOf(Descriptions, description);
+            if (index >= 0) {
+                return _values[index];
+            } else {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Returns the ExtraProperty values for all TEnum items
         /// </summary>
         /// <param name="key">ExtraProperty key</param>

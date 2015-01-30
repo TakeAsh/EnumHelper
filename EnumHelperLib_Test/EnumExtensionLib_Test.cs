@@ -186,6 +186,32 @@ namespace EnumExtensionLib_Test {
             );
         }
 
+        [TestCase("en-US", "[R_en] Unix(LF)", NewLineCodes.Lf)]
+        [TestCase("en-US", "[R_en] Mac(CR)", NewLineCodes.Cr)]
+        [TestCase("en-US", "[A] Windows(CR+LF)", NewLineCodes.CrLf)]
+        [TestCase("en-US", "LfCr", NewLineCodes.LfCr)]
+        [TestCase("en-US", null, null)]
+        [TestCase("en-US", "", null)]
+        [TestCase("en-US", "Undefined", null)]
+        [TestCase("ja-JP", "[R_ja] ユニックス(LF)", NewLineCodes.Lf)]
+        [TestCase("ja-JP", "[R_en] Mac(CR)", NewLineCodes.Cr)]
+        [TestCase("ja-JP", "[R_ja] ウィンドウズ(CR+LF)", NewLineCodes.CrLf)]
+        [TestCase("ja-JP", "LfCr", NewLineCodes.LfCr)]
+        [TestCase("ja-JP", null, null)]
+        [TestCase("ja-JP", "", null)]
+        [TestCase("ja-JP", "Undefined", null)]
+        public void GetValueNullableFromDescription_Test(string culture, string description, NewLineCodes? expected) {
+            if (!String.IsNullOrEmpty(culture)) {
+                SetCurrentCulture(culture);
+            }
+            var actual = NewLineCodeHelper.GetValueNullableFromDescription(description);
+            if (expected != null) {
+                Assert.AreEqual(expected, actual);
+            } else {
+                Assert.Null(actual);
+            }
+        }
+
         [TestCase("Entity", "\n//\r//\r\n//\n\r")]
         [TestCase("Escaped", "\"\'\t//\'\"//あ//\uD842\uDFB7")]
         public void GetExtraProperties_Test(string key, string properties) {
