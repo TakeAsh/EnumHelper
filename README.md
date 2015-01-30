@@ -41,6 +41,8 @@ comboBox_NewLineCode_Gallery.SelectedValuePath = "Value";
 comboBox_NewLineCode_Gallery.SelectedValue = NewLineCodes.CrLf;
 
 var newLineCode = (NewLineCodes)comboBox_NewLineCode_Gallery.SelectedValue;
+var desc1 = newLineCode.ToDescription();
+var desc2 = NewLineCodesHelper.ValueDescriptionDictionary[newLineCode];
 var newLineEntity = newLineCode.GetExtraProperty("Entity");
 
 var newLineEntities = NewLineCodesHelper.GetAllExtraProperties("Entity");
@@ -60,7 +62,8 @@ var newLineEntities = NewLineCodesHelper.GetAllExtraProperties("Entity");
 - TEnum[] Values [get]
 - string[] Names [get]
 - string[] Descriptions [get]
-- ValueDescriptionPair[] ValueDescriptionPairs [get]
+- KeyValuePair&lt;TEnum, string&gt;[] ValueDescriptionPairs [get]
+- Dictionary&lt;TEnum, string&gt; ValueDescriptionDictionary [get]
 
 ## EnumExtensionMethods Public Methods
 - string ToDescription(this Enum en)
