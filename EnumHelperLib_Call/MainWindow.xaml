@@ -30,16 +30,18 @@
                 <r:RibbonGroup Header="Options">
                     <r:RibbonComboBox x:Name="comboBox_NewLineCode" ToolTip="NewLineCode">
                         <r:RibbonGallery x:Name="comboBox_NewLineCode_Gallery"
-                            SelectedValuePath="Value"
+                            SelectedValuePath="Key"
                             SelectionChanged="comboBox_NewLineCode_Gallery_SelectionChanged">
-                            <r:RibbonGalleryCategory x:Name="comboBox_NewLineCode_GalleryCategory" />
+                            <r:RibbonGalleryCategory x:Name="comboBox_NewLineCode_GalleryCategory"
+                                DisplayMemberPath="Value" />
                         </r:RibbonGallery>
                     </r:RibbonComboBox>
                     <r:RibbonComboBox x:Name="comboBox_Separator" ToolTip="Separator">
                         <r:RibbonGallery x:Name="comboBox_Separator_Gallery"
-                            SelectedValuePath="Value"
+                            SelectedValuePath="Key"
                             SelectionChanged="comboBox_Separator_Gallery_SelectionChanged">
-                            <r:RibbonGalleryCategory x:Name="comboBox_Separator_GalleryCategory" />
+                            <r:RibbonGalleryCategory x:Name="comboBox_Separator_GalleryCategory"
+                                DisplayMemberPath="Value" />
                         </r:RibbonGallery>
                     </r:RibbonComboBox>
                 </r:RibbonGroup>

@@ -22,58 +22,10 @@ namespace TakeAsh {
         static private Regex regPropertyResources = new Regex(@"\.Properties\.");
         static private Regex regLastResources = new Regex(@"\.resources$");
 
-        public class ValueDescriptionPair :
-            IEquatable<ValueDescriptionPair> {
-            public TEnum Value { get; private set; }
-            public string Description { get; private set; }
-
-            public ValueDescriptionPair(TEnum value, string description) {
-                this.Value = value;
-                this.Description = description;
-            }
-
-            public override string ToString() {
-                return Description;
-            }
-
-            #region IEquatable members
-
-            public bool Equals(ValueDescriptionPair other) {
-                if (other == null) {
-                    return false;
-                }
-                return this.Value.Equals(other.Value) && this.Description == other.Description;
-            }
-
-            public override bool Equals(object obj) {
-                if (obj == null) {
-                    return false;
-                }
-                return Equals(obj as ValueDescriptionPair);
-            }
-
-            public override int GetHashCode() {
-                return Value.GetHashCode() ^ Description.GetHashCode();
-            }
-
-            static public bool operator ==(ValueDescriptionPair a, ValueDescriptionPair b) {
-                if ((object)a == null || (object)b == null) {
-                    return Object.Equals(a, b);
-                }
-                return a.Equals(b);
-            }
-
-            static public bool operator !=(ValueDescriptionPair a, ValueDescriptionPair b) {
-                return !(a == b);
-            }
-
-            #endregion
-        }
-
         static private TEnum[] _values;
         static private string[] _names;
         static private string[] _descriptions;
-        static private ValueDescriptionPair[] _valueDescriptionPairs;
+        static private KeyValuePair<TEnum, string>[] _valueDescriptionPairs;
         static private ResourceManager _resMan;
 
         static EnumHelper() {
@@ -126,7 +78,7 @@ namespace TakeAsh {
         /// <summary>
         /// List of TEnum value and its description pair
         /// </summary>
-        static public ValueDescriptionPair[] ValueDescriptionPairs {
+        static public KeyValuePair<TEnum, string>[] ValueDescriptionPairs {
             get {
                 if (_valueDescriptionPairs != null) {
                     return _valueDescriptionPairs;
@@ -134,9 +86,9 @@ namespace TakeAsh {
                 var toDescription = _ResourceManager != null ?
                     (Func<TEnum, string>)((key) => ToDescription(key)) :
                     (Func<TEnum, string>)((key) => _ToDescription(key));
-                var valueDescriptionPairs = new List<ValueDescriptionPair>();
+                var valueDescriptionPairs = new List<KeyValuePair<TEnum, string>>();
                 foreach (var item in _values) {
-                    valueDescriptionPairs.Add(new ValueDescriptionPair(item, toDescription(item)));
+                    valueDescriptionPairs.Add(new KeyValuePair<TEnum, string>(item, toDescription(item)));
                 }
                 return _valueDescriptionPairs = valueDescriptionPairs.ToArray();
             }

@@ -118,11 +118,11 @@ namespace EnumExtensionLib_Test {
         [TestCase]
         public void ValueDescriptionPairs_Test() {
             foreach (var culture in expectedDescriptions.Keys) {
-                var expected = new NewLineCodeHelper.ValueDescriptionPair[expectedDescriptions[culture].Count];
+                var expected = new KeyValuePair<NewLineCodes, string>[expectedDescriptions[culture].Count];
                 SetCurrentCulture(culture);
                 for (var i = 0; i < NewLineCodeHelper.Values.Length; ++i) {
                     var key = NewLineCodeHelper.Values[i];
-                    expected[i] = new NewLineCodeHelper.ValueDescriptionPair(key, expectedDescriptions[culture][key]);
+                    expected[i] = new KeyValuePair<NewLineCodes, string>(key, expectedDescriptions[culture][key]);
                 }
                 CollectionAssert.AreEqual(
                     expected,
