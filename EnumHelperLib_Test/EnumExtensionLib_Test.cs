@@ -146,6 +146,22 @@ namespace EnumExtensionLib_Test {
             );
         }
 
+        [TestCase("Lf", NewLineCodes.Lf)]
+        [TestCase("Cr", NewLineCodes.Cr)]
+        [TestCase("CrLf", NewLineCodes.CrLf)]
+        [TestCase("LfCr", NewLineCodes.LfCr)]
+        [TestCase(null, null)]
+        [TestCase("", null)]
+        [TestCase("Undefined", null)]
+        public void GetValueNullableFromName_Test(string name, NewLineCodes? expected) {
+            var actual = NewLineCodeHelper.GetValueNullableFromName(name);
+            if (expected != null) {
+                Assert.AreEqual(expected, actual);
+            } else {
+                Assert.Null(actual);
+            }
+        }
+
         [TestCase("en-US", "[R_en] Unix(LF)", NewLineCodes.Lf)]
         [TestCase("en-US", "[R_en] Mac(CR)", NewLineCodes.Cr)]
         [TestCase("en-US", "[A] Windows(CR+LF)", NewLineCodes.CrLf)]

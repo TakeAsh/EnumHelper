@@ -131,6 +131,25 @@ namespace TakeAsh {
         }
 
         /// <summary>
+        /// Returns TEnum value from name
+        /// </summary>
+        /// <param name="name">TEnum name</param>
+        /// <returns>
+        /// <list type="table">
+        /// <item><term>TEnum value</term><description>when it is found.</description></item>
+        /// <item><term>null</term><description>when it is null, or blank, or not found.</description></item>
+        /// </list>
+        /// </returns>
+        static public Nullable<TEnum> GetValueNullableFromName(string name) {
+            var index = Array.IndexOf(_names, name);
+            if (index >= 0) {
+                return _values[index];
+            } else {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Returns TEnum value from description
         /// </summary>
         /// <param name="description">TEnum description</param>
