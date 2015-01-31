@@ -38,7 +38,7 @@ comboBox_NewLineCode_GalleryCategory.DisplayMemberPath = "Value";
 comboBox_NewLineCode_Gallery.SelectedValuePath = "Key";
 comboBox_NewLineCode_Gallery.SelectedValue = NewLineCodes.CrLf;
 
-var newLineCode = (NewLineCodes)comboBox_NewLineCode_Gallery.SelectedValue;
+var newLineCode = NewLineCodesHelper.Cast(comboBox_NewLineCode_Gallery.SelectedValue);
 var desc1 = newLineCode.ToDescription();
 var desc2 = NewLineCodesHelper.ValueDescriptionDictionary[newLineCode];
 var newLineEntity = newLineCode.GetExtraProperty("Entity");
@@ -55,6 +55,7 @@ var newLineEntities = NewLineCodesHelper.GetAllExtraProperties("Entity");
 - TEnum[] Values [get]
 
 ### EnumHelper&lt;TEnum&gt; Class Methods
+- TEnum Cast(object obj)
 - string[] GetAllExtraProperties(string key)
 - string GetAssemblyName()
 - TEnum GetValueFromDescription(string description)
