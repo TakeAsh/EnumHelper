@@ -65,17 +65,17 @@ namespace EnumHelperLib_Call {
         }
 
         private void initDialog() {
-            var newLineCode = (Options.NewLineCodes)comboBox_NewLineCode_Gallery.SelectedValue;
+            var newLineCode = NewLineCodesHelper.Cast(comboBox_NewLineCode_Gallery.SelectedValue);
             comboBox_NewLineCode_GalleryCategory.ItemsSource = NewLineCodesHelper.ValueDescriptionPairs;
             comboBox_NewLineCode_Gallery.SelectedValue = newLineCode;
-            var separator = (Options.Separators)comboBox_Separator_Gallery.SelectedValue;
+            var separator = SeparatorsHelper.Cast(comboBox_Separator_Gallery.SelectedValue);
             comboBox_Separator_GalleryCategory.ItemsSource = SeparatorsHelper.ValueDescriptionPairs;
             comboBox_Separator_Gallery.SelectedValue = separator;
         }
 
         private void SetOption() {
-            Options.NewLineCode = (Options.NewLineCodes)comboBox_NewLineCode_Gallery.SelectedValue;
-            Options.Separator = (Options.Separators)comboBox_Separator_Gallery.SelectedValue;
+            Options.NewLineCode = NewLineCodesHelper.Cast(comboBox_NewLineCode_Gallery.SelectedValue);
+            Options.Separator = SeparatorsHelper.Cast(comboBox_Separator_Gallery.SelectedValue);
             text_Result.Text = Options.ToXml();
         }
 

@@ -261,6 +261,20 @@ namespace TakeAsh {
         }
 
         /// <summary>
+        /// Returns TEnum value casted from obj
+        /// </summary>
+        /// <param name="obj">object</param>
+        /// <returns>
+        /// <list type="table">
+        /// <item><term>TEnum value</term><description>when obj is not null, and castable to TEnum</description></item>
+        /// <item><term>default(TEnum)</term><description>when obj is null</description></item>
+        /// </list>
+        /// </returns>
+        static public TEnum Cast(object obj) {
+            return (TEnum?)obj ?? default(TEnum);
+        }
+
+        /// <summary>
         /// Returns Assembly name
         /// </summary>
         /// <returns>Assembly name</returns>

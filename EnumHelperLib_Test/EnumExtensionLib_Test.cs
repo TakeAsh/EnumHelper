@@ -358,5 +358,16 @@ namespace EnumExtensionLib_Test {
                 Assert.Null(actualEscaped);
             }
         }
+
+        [TestCase(NewLineCodes.Lf, NewLineCodes.Lf)]
+        [TestCase(NewLineCodes.Cr, NewLineCodes.Cr)]
+        [TestCase(NewLineCodes.CrLf, NewLineCodes.CrLf)]
+        [TestCase(NewLineCodes.LfCr, NewLineCodes.LfCr)]
+        [TestCase((NewLineCodes)0, (NewLineCodes)0)]
+        [TestCase((NewLineCodes)3, (NewLineCodes)3)]
+        [TestCase(null, default(NewLineCodes))]
+        public void Cast_Test(object item, NewLineCodes expected) {
+            Assert.AreEqual(expected, NewLineCodeHelper.Cast(item));
+        }
     }
 }
