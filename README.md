@@ -1,4 +1,4 @@
-﻿# Enum Helper Class
+﻿# EnumHelper&lt;TEnum&gt; Class
 - It helps binding an enum with description to ComboBox.
 - Enum item description come from:
   1. localized resource (EnumType_ItemName)
@@ -9,7 +9,6 @@
 - GetExtraProperty extension method returns the value from the dictionary.
 
 ## Usage Sample
-### Definition
 ```csharp
 using System.ComponentModel;
 using TakeAsh;
@@ -28,16 +27,15 @@ public enum NewLineCodes {
   CrLf,
 }
 
-Resource:
-string NewLineCodes_Lf = "Unix(LF)";
-string NewLineCodes_Cr = "Mac(CR)";
-string NewLineCodes_CrLf = "Windows(CR+LF)";
-```
+// Resource
+string NewLineCodes_Lf = "Unix(LF) [Localized]";
+string NewLineCodes_Cr = "Mac(CR) [Localized]";
+string NewLineCodes_CrLf = "Windows(CR+LF) [Localized]";
+//
 
-### Binding an enum with description to ComboBox
-```csharp
 comboBox_NewLineCode_GalleryCategory.ItemsSource = NewLineCodesHelper.ValueDescriptionPairs;
-comboBox_NewLineCode_Gallery.SelectedValuePath = "Value";
+comboBox_NewLineCode_GalleryCategory.DisplayMemberPath = "Value";
+comboBox_NewLineCode_Gallery.SelectedValuePath = "Key";
 comboBox_NewLineCode_Gallery.SelectedValue = NewLineCodes.CrLf;
 
 var newLineCode = (NewLineCodes)comboBox_NewLineCode_Gallery.SelectedValue;
@@ -48,27 +46,30 @@ var newLineEntity = newLineCode.GetExtraProperty("Entity");
 var newLineEntities = NewLineCodesHelper.GetAllExtraProperties("Entity");
 ```
 
-## EnumHelper<TEnum> Public Methods
-- void Init()
-- TEnum GetValueFromName(string name)
-- TEnum GetValueFromDescription(string description)
-- string[] GetAllExtraProperties(string key)
-- bool IsDefined(int value)
-- bool TryParse (string value, out TEnum result)
-- string ToDescription(TEnum en)
-- string GetAssemblyName()
-
-## EnumHelper<TEnum> Public Properties
-- TEnum[] Values [get]
-- string[] Names [get]
+## Properties and Methods
+### EnumHelper&lt;TEnum&gt; Class Properties
 - string[] Descriptions [get]
-- KeyValuePair&lt;TEnum, string&gt;[] ValueDescriptionPairs [get]
+- string[] Names [get]
 - Dictionary&lt;TEnum, string&gt; ValueDescriptionDictionary [get]
+- KeyValuePair&lt;TEnum, string&gt;[] ValueDescriptionPairs [get]
+- TEnum[] Values [get]
 
-## EnumExtensionMethods Public Methods
-- string ToDescription(this Enum en)
-- string GetExtraProperty(this Enum en, string key)
+### EnumHelper&lt;TEnum&gt; Class Methods
+- string[] GetAllExtraProperties(string key)
+- string GetAssemblyName()
+- TEnum GetValueFromDescription(string description)
+- TEnum GetValueFromName(string name)
+- Nullable&lt;TEnum&gt; GetValueNullableFromDescription(string description)
+- Nullable&lt;TEnum&gt; GetValueNullableFromName(string name)
+- void Init()
+- bool IsDefined(object value)
+- string ToDescription(TEnum en)
+- bool TryParse(string value, out TEnum result)
+
+### EnumExtensionMethods Class Methods
 - string GetAssemblyName(this Enum en)
+- string GetExtraProperty(this Enum en, string key)
+- string ToDescription(this Enum en)
 
 ## Link
 - [C# 3.0 : using extension methods for enum ToString - I know the answer (it's 42) - MSDN Blogs](http://blogs.msdn.com/b/abhinaba/archive/2005/10/21/483337.aspx)
