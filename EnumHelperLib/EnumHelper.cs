@@ -13,8 +13,9 @@ namespace TakeAsh {
     /// </summary>
     /// <typeparam name="TEnum">Enum type</typeparam>
     /// <remarks>
-    /// <term>C# の enum に関連する小技。 - Qiita</term>
-    /// <description>http://qiita.com/hugo-sb/items/38fe86a09e8e0865d471</description>
+    /// <list type="bullet">
+    /// <item>[C# の enum に関連する小技。 - Qiita](http://qiita.com/hugo-sb/items/38fe86a09e8e0865d471)</item>
+    /// </list>
     /// </remarks>
     static public class EnumHelper<TEnum>
         where TEnum : struct, IConvertible {
@@ -94,9 +95,9 @@ namespace TakeAsh {
         /// <summary>
         /// Initialize cache
         /// </summary>
-        /// <attention>
+        /// <remarks>
         /// You MUST call Init() after changing CurrentCulture.
-        /// </attention>
+        /// </remarks>
         static public void Init() {
             var toDescription = (_resMan = _GetResourceManager()) != null ?
                 (Func<TEnum, string>)((key) => ToDescription(key)) :
@@ -324,14 +325,8 @@ namespace TakeAsh {
     /// </summary>
     /// <remarks>
     /// <list type="bullet">
-    /// <item>
-    /// <term>C# 3.0 : using extension methods for enum ToString</term>
-    /// <description>http://blogs.msdn.com/b/abhinaba/archive/2005/10/21/483337.aspx</description>
-    /// </item>
-    /// <item>
-    /// <term>[C#] 何故 enum に拘りたくなるのか？ - Moonmile Solutions Blog</term>
-    /// <description>http://www.moonmile.net/blog/archives/3666</description>
-    /// </item>
+    /// <item>[C# 3.0 : using extension methods for enum ToString - I know the answer (it's 42) - MSDN Blogs](http://blogs.msdn.com/b/abhinaba/archive/2005/10/21/483337.aspx)</item>
+    /// <item>[[C#] 何故 enum に拘りたくなるのか？ | Moonmile Solutions Blog](http://www.moonmile.net/blog/archives/3666)</item>
     /// </list>
     /// </remarks>
     static public class EnumExtensionMethods {
