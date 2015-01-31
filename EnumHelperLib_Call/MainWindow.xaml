@@ -45,6 +45,10 @@
                         </r:RibbonGallery>
                     </r:RibbonComboBox>
                 </r:RibbonGroup>
+                <r:RibbonGroup Header="Options2">
+                    <ComboBox x:Name="comboBox_NewLineCode2" ToolTip="NewLineCode"
+                        SelectedValuePath="Key" DisplayMemberPath="Value" />
+                </r:RibbonGroup>
             </r:RibbonTab>
         </r:Ribbon>
 

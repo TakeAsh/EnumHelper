@@ -34,16 +34,21 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeHelper.cs" />
+    <Compile Include="ComboBoxExtensionMethods.cs" />
     <Compile Include="EnumExtensionMethods.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="ExtraPropertiesAttribute.cs" />
