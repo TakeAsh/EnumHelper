@@ -61,7 +61,7 @@ namespace EnumHelperLib_Call.Properties {
         }
         
         /// <summary>
-        ///   Mac (CR) に類似しているローカライズされた文字列を検索します。
+        ///   [R_en] Mac(CR) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Options_NewLineCodes_Cr {
             get {
@@ -70,16 +70,7 @@ namespace EnumHelperLib_Call.Properties {
         }
         
         /// <summary>
-        ///   Windows (CR+LF) に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Options_NewLineCodes_CrLf {
-            get {
-                return ResourceManager.GetString("Options_NewLineCodes_CrLf", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Unix (LF) に類似しているローカライズされた文字列を検索します。
+        ///   [R_en] Unix(LF) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Options_NewLineCodes_Lf {
             get {

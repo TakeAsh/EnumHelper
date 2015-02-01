@@ -1,31 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
+using EnumHelperLib_Call;
 using F2DUnitTests;
 using NUnit.Framework;
 using TakeAsh;
 
 namespace EnumExtensionLib_Test {
 
-    using EnumDescriptionDictionary = Dictionary<NewLineCodes, string>;
-    using NewLineCodeHelper = EnumHelper<NewLineCodes>;
-
-    public enum NewLineCodes {
-        [ExtraProperties("Entity:'\n', Escaped:'\\x22\\u0027\t'")]
-        Lf = 1,
-
-        [ExtraProperties("Entity : \"\r\"Escaped : '\\x0027\\x0022'")]
-        [System.ComponentModel.Description("[A] Mac(CR)")]
-        Cr = 2,
-
-        [ExtraProperties("Entity:\t'\r\n';;;Escaped:\t\"\\x3042\"")] // U+3042 あ
-        [System.ComponentModel.Description("[A] Windows(CR+LF)")]
-        CrLf = 4,
-
-        [ExtraProperties("Entity:\n\t'\n\r'\nEscaped:\n\t'\\uD842\\uDFB7'")] // U+00020BB7 𠮷
-        LfCr = 8,
-    }
+    using EnumDescriptionDictionary = Dictionary<Options.NewLineCodes, string>;
+    using NewLineCodeHelper = EnumHelper<Options.NewLineCodes>;
 
     [TestFixture]
     public class EnumExtensionLib_Test {
@@ -35,26 +21,26 @@ namespace EnumExtensionLib_Test {
             {
                 "en-US",
                 new EnumDescriptionDictionary(){
-                    {NewLineCodes.Lf, "[R_en] Unix(LF)"},
-                    {NewLineCodes.Cr, "[R_en] Mac(CR)"},
-                    {NewLineCodes.CrLf, "[A] Windows(CR+LF)"},
-                    {NewLineCodes.LfCr, "LfCr"},
+                    {Options.NewLineCodes.Lf, "[R_en] Unix(LF)"},
+                    {Options.NewLineCodes.Cr, "[R_en] Mac(CR)"},
+                    {Options.NewLineCodes.CrLf, "[A] Windows(CR+LF)"},
+                    {Options.NewLineCodes.LfCr, "LfCr"},
                 }
             },
             {
                 "ja-JP",
                 new EnumDescriptionDictionary(){
-                    {NewLineCodes.Lf, "[R_ja] ユニックス(LF)"},
-                    {NewLineCodes.Cr, "[R_en] Mac(CR)"},
-                    {NewLineCodes.CrLf, "[R_ja] ウィンドウズ(CR+LF)"},
-                    {NewLineCodes.LfCr, "LfCr"},
+                    {Options.NewLineCodes.Lf, "[R_ja] ユニックス(LF)"},
+                    {Options.NewLineCodes.Cr, "[R_en] Mac(CR)"},
+                    {Options.NewLineCodes.CrLf, "[R_ja] ウィンドウズ(CR+LF)"},
+                    {Options.NewLineCodes.LfCr, "LfCr"},
                 }
             },
         };
 
         [SetUp]
         public void setup() {
-            AssemblyUtilities.SetEntryAssembly();
+            AssemblyUtilities.SetEntryAssembly(Assembly.GetAssembly(typeof(Options)));
         }
 
         private void SetCurrentCulture(string cultureName) {
@@ -66,18 +52,18 @@ namespace EnumExtensionLib_Test {
 
         [TestCase]
         public void Assembly_Test() {
-            var expected = "EnumHelperLib_Test";
+            var expected = "EnumHelperLib_Call";
             Assert.AreEqual(expected, NewLineCodeHelper.GetAssemblyName());
-            Assert.AreEqual(expected, NewLineCodes.Lf.GetAssemblyName());
+            Assert.AreEqual(expected, Options.NewLineCodes.Lf.GetAssemblyName());
         }
 
         [TestCase]
         public void Values_Test() {
-            var expected = new NewLineCodes[]{
-                NewLineCodes.Lf,
-                NewLineCodes.Cr,
-                NewLineCodes.CrLf,
-                NewLineCodes.LfCr,
+            var expected = new Options.NewLineCodes[]{
+                Options.NewLineCodes.Lf,
+                Options.NewLineCodes.Cr,
+                Options.NewLineCodes.CrLf,
+                Options.NewLineCodes.LfCr,
             };
             CollectionAssert.AreEqual(
                 expected,
@@ -118,11 +104,11 @@ namespace EnumExtensionLib_Test {
         [TestCase]
         public void ValueDescriptionPairs_Test() {
             foreach (var culture in expectedDescriptions.Keys) {
-                var expected = new KeyValuePair<NewLineCodes, string>[expectedDescriptions[culture].Count];
+                var expected = new KeyValuePair<Options.NewLineCodes, string>[expectedDescriptions[culture].Count];
                 SetCurrentCulture(culture);
                 for (var i = 0; i < NewLineCodeHelper.Values.Length; ++i) {
                     var key = NewLineCodeHelper.Values[i];
-                    expected[i] = new KeyValuePair<NewLineCodes, string>(key, expectedDescriptions[culture][key]);
+                    expected[i] = new KeyValuePair<Options.NewLineCodes, string>(key, expectedDescriptions[culture][key]);
                 }
                 CollectionAssert.AreEqual(
                     expected,
@@ -132,28 +118,28 @@ namespace EnumExtensionLib_Test {
             }
         }
 
-        [TestCase("Lf", NewLineCodes.Lf)]
-        [TestCase("Cr", NewLineCodes.Cr)]
-        [TestCase("CrLf", NewLineCodes.CrLf)]
-        [TestCase("LfCr", NewLineCodes.LfCr)]
-        [TestCase(null, default(NewLineCodes))]
-        [TestCase("", default(NewLineCodes))]
-        [TestCase("Undefined", default(NewLineCodes))]
-        public void GetValueFromName_Test(string name, NewLineCodes expected) {
+        [TestCase("Lf", Options.NewLineCodes.Lf)]
+        [TestCase("Cr", Options.NewLineCodes.Cr)]
+        [TestCase("CrLf", Options.NewLineCodes.CrLf)]
+        [TestCase("LfCr", Options.NewLineCodes.LfCr)]
+        [TestCase(null, default(Options.NewLineCodes))]
+        [TestCase("", default(Options.NewLineCodes))]
+        [TestCase("Undefined", default(Options.NewLineCodes))]
+        public void GetValueFromName_Test(string name, Options.NewLineCodes expected) {
             Assert.AreEqual(
                 expected,
                 NewLineCodeHelper.GetValueFromName(name)
             );
         }
 
-        [TestCase("Lf", NewLineCodes.Lf)]
-        [TestCase("Cr", NewLineCodes.Cr)]
-        [TestCase("CrLf", NewLineCodes.CrLf)]
-        [TestCase("LfCr", NewLineCodes.LfCr)]
+        [TestCase("Lf", Options.NewLineCodes.Lf)]
+        [TestCase("Cr", Options.NewLineCodes.Cr)]
+        [TestCase("CrLf", Options.NewLineCodes.CrLf)]
+        [TestCase("LfCr", Options.NewLineCodes.LfCr)]
         [TestCase(null, null)]
         [TestCase("", null)]
         [TestCase("Undefined", null)]
-        public void GetValueNullableFromName_Test(string name, NewLineCodes? expected) {
+        public void GetValueNullableFromName_Test(string name, Options.NewLineCodes? expected) {
             var actual = NewLineCodeHelper.GetValueNullableFromName(name);
             if (expected != null) {
                 Assert.AreEqual(expected, actual);
@@ -162,21 +148,21 @@ namespace EnumExtensionLib_Test {
             }
         }
 
-        [TestCase("en-US", "[R_en] Unix(LF)", NewLineCodes.Lf)]
-        [TestCase("en-US", "[R_en] Mac(CR)", NewLineCodes.Cr)]
-        [TestCase("en-US", "[A] Windows(CR+LF)", NewLineCodes.CrLf)]
-        [TestCase("en-US", "LfCr", NewLineCodes.LfCr)]
-        [TestCase("en-US", null, default(NewLineCodes))]
-        [TestCase("en-US", "", default(NewLineCodes))]
-        [TestCase("en-US", "Undefined", default(NewLineCodes))]
-        [TestCase("ja-JP", "[R_ja] ユニックス(LF)", NewLineCodes.Lf)]
-        [TestCase("ja-JP", "[R_en] Mac(CR)", NewLineCodes.Cr)]
-        [TestCase("ja-JP", "[R_ja] ウィンドウズ(CR+LF)", NewLineCodes.CrLf)]
-        [TestCase("ja-JP", "LfCr", NewLineCodes.LfCr)]
-        [TestCase("ja-JP", null, default(NewLineCodes))]
-        [TestCase("ja-JP", "", default(NewLineCodes))]
-        [TestCase("ja-JP", "Undefined", default(NewLineCodes))]
-        public void GetValueFromDescription_Test(string culture, string description, NewLineCodes expected) {
+        [TestCase("en-US", "[R_en] Unix(LF)", Options.NewLineCodes.Lf)]
+        [TestCase("en-US", "[R_en] Mac(CR)", Options.NewLineCodes.Cr)]
+        [TestCase("en-US", "[A] Windows(CR+LF)", Options.NewLineCodes.CrLf)]
+        [TestCase("en-US", "LfCr", Options.NewLineCodes.LfCr)]
+        [TestCase("en-US", null, default(Options.NewLineCodes))]
+        [TestCase("en-US", "", default(Options.NewLineCodes))]
+        [TestCase("en-US", "Undefined", default(Options.NewLineCodes))]
+        [TestCase("ja-JP", "[R_ja] ユニックス(LF)", Options.NewLineCodes.Lf)]
+        [TestCase("ja-JP", "[R_en] Mac(CR)", Options.NewLineCodes.Cr)]
+        [TestCase("ja-JP", "[R_ja] ウィンドウズ(CR+LF)", Options.NewLineCodes.CrLf)]
+        [TestCase("ja-JP", "LfCr", Options.NewLineCodes.LfCr)]
+        [TestCase("ja-JP", null, default(Options.NewLineCodes))]
+        [TestCase("ja-JP", "", default(Options.NewLineCodes))]
+        [TestCase("ja-JP", "Undefined", default(Options.NewLineCodes))]
+        public void GetValueFromDescription_Test(string culture, string description, Options.NewLineCodes expected) {
             if (!String.IsNullOrEmpty(culture)) {
                 SetCurrentCulture(culture);
             }
@@ -186,21 +172,21 @@ namespace EnumExtensionLib_Test {
             );
         }
 
-        [TestCase("en-US", "[R_en] Unix(LF)", NewLineCodes.Lf)]
-        [TestCase("en-US", "[R_en] Mac(CR)", NewLineCodes.Cr)]
-        [TestCase("en-US", "[A] Windows(CR+LF)", NewLineCodes.CrLf)]
-        [TestCase("en-US", "LfCr", NewLineCodes.LfCr)]
+        [TestCase("en-US", "[R_en] Unix(LF)", Options.NewLineCodes.Lf)]
+        [TestCase("en-US", "[R_en] Mac(CR)", Options.NewLineCodes.Cr)]
+        [TestCase("en-US", "[A] Windows(CR+LF)", Options.NewLineCodes.CrLf)]
+        [TestCase("en-US", "LfCr", Options.NewLineCodes.LfCr)]
         [TestCase("en-US", null, null)]
         [TestCase("en-US", "", null)]
         [TestCase("en-US", "Undefined", null)]
-        [TestCase("ja-JP", "[R_ja] ユニックス(LF)", NewLineCodes.Lf)]
-        [TestCase("ja-JP", "[R_en] Mac(CR)", NewLineCodes.Cr)]
-        [TestCase("ja-JP", "[R_ja] ウィンドウズ(CR+LF)", NewLineCodes.CrLf)]
-        [TestCase("ja-JP", "LfCr", NewLineCodes.LfCr)]
+        [TestCase("ja-JP", "[R_ja] ユニックス(LF)", Options.NewLineCodes.Lf)]
+        [TestCase("ja-JP", "[R_en] Mac(CR)", Options.NewLineCodes.Cr)]
+        [TestCase("ja-JP", "[R_ja] ウィンドウズ(CR+LF)", Options.NewLineCodes.CrLf)]
+        [TestCase("ja-JP", "LfCr", Options.NewLineCodes.LfCr)]
         [TestCase("ja-JP", null, null)]
         [TestCase("ja-JP", "", null)]
         [TestCase("ja-JP", "Undefined", null)]
-        public void GetValueNullableFromDescription_Test(string culture, string description, NewLineCodes? expected) {
+        public void GetValueNullableFromDescription_Test(string culture, string description, Options.NewLineCodes? expected) {
             if (!String.IsNullOrEmpty(culture)) {
                 SetCurrentCulture(culture);
             }
@@ -243,19 +229,19 @@ namespace EnumExtensionLib_Test {
             );
         }
 
-        [TestCase("Lf", true, NewLineCodes.Lf)]
-        [TestCase("Cr", true, NewLineCodes.Cr)]
-        [TestCase("CrLf", true, NewLineCodes.CrLf)]
-        [TestCase("LfCr", true, NewLineCodes.LfCr)]
-        [TestCase("1", true, NewLineCodes.Lf)]
-        [TestCase("2", true, NewLineCodes.Cr)]
-        [TestCase("4", true, NewLineCodes.CrLf)]
-        [TestCase("8", true, NewLineCodes.LfCr)]
-        [TestCase(null, false, default(NewLineCodes))]
-        [TestCase("", false, default(NewLineCodes))]
-        [TestCase("Undefined", false, default(NewLineCodes))]
-        public void TryParse_Test(string value, bool expectedReturn, NewLineCodes expectedResult) {
-            NewLineCodes actualResult;
+        [TestCase("Lf", true, Options.NewLineCodes.Lf)]
+        [TestCase("Cr", true, Options.NewLineCodes.Cr)]
+        [TestCase("CrLf", true, Options.NewLineCodes.CrLf)]
+        [TestCase("LfCr", true, Options.NewLineCodes.LfCr)]
+        [TestCase("1", true, Options.NewLineCodes.Lf)]
+        [TestCase("2", true, Options.NewLineCodes.Cr)]
+        [TestCase("4", true, Options.NewLineCodes.CrLf)]
+        [TestCase("8", true, Options.NewLineCodes.LfCr)]
+        [TestCase(null, false, default(Options.NewLineCodes))]
+        [TestCase("", false, default(Options.NewLineCodes))]
+        [TestCase("Undefined", false, default(Options.NewLineCodes))]
+        public void TryParse_Test(string value, bool expectedReturn, Options.NewLineCodes expectedResult) {
+            Options.NewLineCodes actualResult;
             Assert.AreEqual(expectedReturn, NewLineCodeHelper.TryParse(value, out actualResult));
             if (expectedReturn) {
                 Assert.AreEqual(expectedResult, actualResult);
@@ -264,13 +250,13 @@ namespace EnumExtensionLib_Test {
 
         public struct ToDescription_TestCase {
             public string Culture { get; set; }
-            public NewLineCodes Item { get; set; }
+            public Options.NewLineCodes Item { get; set; }
             public bool IsValid { get; set; }
             public string Expected { get; set; }
 
             public ToDescription_TestCase(
                 string culture,
-                NewLineCodes item,
+                Options.NewLineCodes item,
                 bool isValid,
                 string expected
             ) : this() {
@@ -282,26 +268,26 @@ namespace EnumExtensionLib_Test {
         }
 
         public static ToDescription_TestCase[] ToDescription_TestCases = new ToDescription_TestCase[]{
-            new ToDescription_TestCase("en-US", NewLineCodes.Lf, true,"[R_en] Unix(LF)"),
-            new ToDescription_TestCase("en-US", NewLineCodes.Cr, true, "[R_en] Mac(CR)"),
-            new ToDescription_TestCase("en-US", NewLineCodes.CrLf, true, "[A] Windows(CR+LF)"),
-            new ToDescription_TestCase("en-US", NewLineCodes.LfCr, true, "LfCr"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)1, true, "[R_en] Unix(LF)"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)2, true, "[R_en] Mac(CR)"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)4, true, "[A] Windows(CR+LF)"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)8, true, "LfCr"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)0, false, "0"),
-            new ToDescription_TestCase("en-US", (NewLineCodes)3, false, "3"),
-            new ToDescription_TestCase("ja-JP", NewLineCodes.Lf, true, "[R_ja] ユニックス(LF)"),
-            new ToDescription_TestCase("ja-JP", NewLineCodes.Cr, true, "[R_en] Mac(CR)"),
-            new ToDescription_TestCase("ja-JP", NewLineCodes.CrLf, true, "[R_ja] ウィンドウズ(CR+LF)"),
-            new ToDescription_TestCase("ja-JP", NewLineCodes.LfCr, true, "LfCr"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)1, true, "[R_ja] ユニックス(LF)"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)2, true, "[R_en] Mac(CR)"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)4, true, "[R_ja] ウィンドウズ(CR+LF)"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)8, true, "LfCr"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)0, false, "0"),
-            new ToDescription_TestCase("ja-JP", (NewLineCodes)3, false, "3"),
+            new ToDescription_TestCase("en-US", Options.NewLineCodes.Lf, true,"[R_en] Unix(LF)"),
+            new ToDescription_TestCase("en-US", Options.NewLineCodes.Cr, true, "[R_en] Mac(CR)"),
+            new ToDescription_TestCase("en-US", Options.NewLineCodes.CrLf, true, "[A] Windows(CR+LF)"),
+            new ToDescription_TestCase("en-US", Options.NewLineCodes.LfCr, true, "LfCr"),
+            new ToDescription_TestCase("en-US", (Options.NewLineCodes)1, true, "[R_en] Unix(LF)"),
+            new ToDescription_TestCase("en-US", (Options.NewLineCodes)2, true, "[R_en] Mac(CR)"),
+            new ToDescription_TestCase("en-US", (Options.NewLineCodes)4, true, "[A] Windows(CR+LF)"),
+            new ToDescription_TestCase("en-US", (Options.NewLineCodes)8, true, "LfCr"),
+            new ToDescription_TestCase("en-US", (Options.NewLineCodes)0, false, "0"),
+            new ToDescription_TestCase("en-US", (Options.NewLineCodes)3, false, "3"),
+            new ToDescription_TestCase("ja-JP", Options.NewLineCodes.Lf, true, "[R_ja] ユニックス(LF)"),
+            new ToDescription_TestCase("ja-JP", Options.NewLineCodes.Cr, true, "[R_en] Mac(CR)"),
+            new ToDescription_TestCase("ja-JP", Options.NewLineCodes.CrLf, true, "[R_ja] ウィンドウズ(CR+LF)"),
+            new ToDescription_TestCase("ja-JP", Options.NewLineCodes.LfCr, true, "LfCr"),
+            new ToDescription_TestCase("ja-JP", (Options.NewLineCodes)1, true, "[R_ja] ユニックス(LF)"),
+            new ToDescription_TestCase("ja-JP", (Options.NewLineCodes)2, true, "[R_en] Mac(CR)"),
+            new ToDescription_TestCase("ja-JP", (Options.NewLineCodes)4, true, "[R_ja] ウィンドウズ(CR+LF)"),
+            new ToDescription_TestCase("ja-JP", (Options.NewLineCodes)8, true, "LfCr"),
+            new ToDescription_TestCase("ja-JP", (Options.NewLineCodes)0, false, "0"),
+            new ToDescription_TestCase("ja-JP", (Options.NewLineCodes)3, false, "3"),
         };
 
         public static class ToDescription_TestCaseProvider {
@@ -315,7 +301,7 @@ namespace EnumExtensionLib_Test {
         }
 
         [Test, TestCaseSource(typeof(ToDescription_TestCaseProvider), "AllTestCases")]
-        public string ToDescription_Test(string culture, NewLineCodes item, bool isValid, string expected) {
+        public string ToDescription_Test(string culture, Options.NewLineCodes item, bool isValid, string expected) {
             if (!String.IsNullOrEmpty(culture)) {
                 SetCurrentCulture(culture);
             }
@@ -323,7 +309,7 @@ namespace EnumExtensionLib_Test {
         }
 
         [Test, TestCaseSource(typeof(ToDescription_TestCaseProvider), "AllTestCases")]
-        public string ValueDescriptionDictionary_Test(string culture, NewLineCodes item, bool isValid, string expected) {
+        public string ValueDescriptionDictionary_Test(string culture, Options.NewLineCodes item, bool isValid, string expected) {
             if (!String.IsNullOrEmpty(culture)) {
                 SetCurrentCulture(culture);
             }
@@ -334,17 +320,17 @@ namespace EnumExtensionLib_Test {
                 expected; // skip
         }
 
-        [TestCase(NewLineCodes.Lf, "\n", "\"\'\t")]
-        [TestCase(NewLineCodes.Cr, "\r", "\'\"")]
-        [TestCase(NewLineCodes.CrLf, "\r\n", "あ")]
-        [TestCase(NewLineCodes.LfCr, "\n\r", "\uD842\uDFB7")]
-        [TestCase((NewLineCodes)1, "\n", "\x22\u0027\x09")]
-        [TestCase((NewLineCodes)2, "\r", "\u0027\x22")]
-        [TestCase((NewLineCodes)4, "\r\n", "\u3042")]
-        [TestCase((NewLineCodes)8, "\n\r", "\xD842\xDFB7")]
-        [TestCase((NewLineCodes)0, null, null)]
-        [TestCase((NewLineCodes)3, null, null)]
-        public void GetExtraProperty_Test(NewLineCodes item, string expectedEntity, string expectedEscaped) {
+        [TestCase(Options.NewLineCodes.Lf, "\n", "\"\'\t")]
+        [TestCase(Options.NewLineCodes.Cr, "\r", "\'\"")]
+        [TestCase(Options.NewLineCodes.CrLf, "\r\n", "あ")]
+        [TestCase(Options.NewLineCodes.LfCr, "\n\r", "\uD842\uDFB7")]
+        [TestCase((Options.NewLineCodes)1, "\n", "\x22\u0027\x09")]
+        [TestCase((Options.NewLineCodes)2, "\r", "\u0027\x22")]
+        [TestCase((Options.NewLineCodes)4, "\r\n", "\u3042")]
+        [TestCase((Options.NewLineCodes)8, "\n\r", "\xD842\xDFB7")]
+        [TestCase((Options.NewLineCodes)0, null, null)]
+        [TestCase((Options.NewLineCodes)3, null, null)]
+        public void GetExtraProperty_Test(Options.NewLineCodes item, string expectedEntity, string expectedEscaped) {
             var actualEntity = item.GetExtraProperty("Entity");
             if (expectedEntity != null) {
                 Assert.AreEqual(expectedEntity, actualEntity);
@@ -359,14 +345,14 @@ namespace EnumExtensionLib_Test {
             }
         }
 
-        [TestCase(NewLineCodes.Lf, NewLineCodes.Lf)]
-        [TestCase(NewLineCodes.Cr, NewLineCodes.Cr)]
-        [TestCase(NewLineCodes.CrLf, NewLineCodes.CrLf)]
-        [TestCase(NewLineCodes.LfCr, NewLineCodes.LfCr)]
-        [TestCase((NewLineCodes)0, (NewLineCodes)0)]
-        [TestCase((NewLineCodes)3, (NewLineCodes)3)]
-        [TestCase(null, default(NewLineCodes))]
-        public void Cast_Test(object item, NewLineCodes expected) {
+        [TestCase(Options.NewLineCodes.Lf, Options.NewLineCodes.Lf)]
+        [TestCase(Options.NewLineCodes.Cr, Options.NewLineCodes.Cr)]
+        [TestCase(Options.NewLineCodes.CrLf, Options.NewLineCodes.CrLf)]
+        [TestCase(Options.NewLineCodes.LfCr, Options.NewLineCodes.LfCr)]
+        [TestCase((Options.NewLineCodes)0, (Options.NewLineCodes)0)]
+        [TestCase((Options.NewLineCodes)3, (Options.NewLineCodes)3)]
+        [TestCase(null, default(Options.NewLineCodes))]
+        public void Cast_Test(object item, Options.NewLineCodes expected) {
             Assert.AreEqual(expected, NewLineCodeHelper.Cast(item));
         }
     }
