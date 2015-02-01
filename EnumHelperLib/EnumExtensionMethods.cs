@@ -47,7 +47,10 @@ namespace TakeAsh {
                 (resourceManager = new ResourceManager(regLastResources.Replace(resNames[0], ""), assembly)) == null) {
                 return en._ToDescription();
             }
-            var key = String.Format("{0}_{1}", en.GetType().Name, en.ToString());
+            var enumType = en.GetType();
+            var key = (enumType.ReflectedType != null ? enumType.ReflectedType.Name + "_" : "") +
+                enumType.Name + "_" +
+                en.ToString();
             var localizedDescription = resourceManager.GetString(key);
             return !String.IsNullOrEmpty(localizedDescription) ?
                 localizedDescription :

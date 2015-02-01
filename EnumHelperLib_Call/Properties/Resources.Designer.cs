@@ -63,27 +63,27 @@ namespace EnumHelperLib_Call.Properties {
         /// <summary>
         ///   Mac (CR) に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string NewLineCodes_Cr {
+        public static string Options_NewLineCodes_Cr {
             get {
-                return ResourceManager.GetString("NewLineCodes_Cr", resourceCulture);
+                return ResourceManager.GetString("Options_NewLineCodes_Cr", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Windows (CR+LF) に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string NewLineCodes_CrLf {
+        public static string Options_NewLineCodes_CrLf {
             get {
-                return ResourceManager.GetString("NewLineCodes_CrLf", resourceCulture);
+                return ResourceManager.GetString("Options_NewLineCodes_CrLf", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Unix (LF) に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string NewLineCodes_Lf {
+        public static string Options_NewLineCodes_Lf {
             get {
-                return ResourceManager.GetString("NewLineCodes_Lf", resourceCulture);
+                return ResourceManager.GetString("Options_NewLineCodes_Lf", resourceCulture);
             }
         }
     }

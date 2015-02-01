@@ -253,7 +253,10 @@ namespace TakeAsh {
             if (_resMan == null) {
                 return _ToDescription(en);
             }
-            var key = String.Format("{0}_{1}", typeof(TEnum).Name, en.ToString());
+            var enumType = typeof(TEnum);
+            var key = (enumType.ReflectedType != null ? enumType.ReflectedType.Name + "_" : "") +
+                enumType.Name + "_" +
+                en.ToString();
             var localizedDescription = _resMan.GetString(key);
             return !String.IsNullOrEmpty(localizedDescription) ?
                 localizedDescription :
