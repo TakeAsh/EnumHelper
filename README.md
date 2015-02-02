@@ -1,12 +1,13 @@
 ﻿# EnumHelper&lt;TEnum&gt; Class
-- It helps binding an enum with description to ComboBox.
+- It helps binding an enum with description to `ComboBox`.
 - Enum item description come from:
   1. localized resource (EnumType_ItemName)
   1. default resource (EnumType_ItemName)
-  1. Description attribute (System.ComponentModel)
+  1. `Description` attribute (System.ComponentModel)
   1. Enum item name
-- ExtraProperties attribute attaches a Dictionary&lt;string, string&gt;.
-- GetExtraProperty extension method returns the value from the dictionary.
+- Not only `ValueDescriptionPairs` but also `EnumTypeConverter<TEnum>` can be used when the UIElement support `TypeConverter`.
+- `ExtraProperties` attribute attaches a `Dictionary<string, string>`.
+- `GetExtraProperty` extension method returns the value from the dictionary.
 
 ## Usage Sample
 ```csharp
@@ -15,6 +16,7 @@ using TakeAsh;
 
 using NewLineCodesHelper = EnumHelper<NewLineCodes>;
 
+[TypeConverter(typeof(EnumTypeConverter<NewLineCodes>))]
 public enum NewLineCodes {
   [ExtraProperties("Entity:'\n', SecondKey:'Not Used'")]
   [Description("Unix(LF)")]
@@ -33,6 +35,7 @@ string NewLineCodes_Cr = "Mac(CR) [Localized]";
 string NewLineCodes_CrLf = "Windows(CR+LF) [Localized]";
 //
 
+// using ValueDescriptionPairs
 comboBox_NewLineCode_GalleryCategory.ItemsSource = NewLineCodesHelper.ValueDescriptionPairs;
 comboBox_NewLineCode_GalleryCategory.DisplayMemberPath = "Value";
 comboBox_NewLineCode_Gallery.SelectedValuePath = "Key";
@@ -44,6 +47,12 @@ var desc2 = NewLineCodesHelper.ValueDescriptionDictionary[newLineCode];
 var newLineEntity = newLineCode.GetExtraProperty("Entity");
 
 var newLineEntities = NewLineCodesHelper.GetAllExtraProperties("Entity");
+
+// using TypeConverter
+comboBox_NewLineCode2_GalleryCategory.ItemsSource = NewLineCodesHelper.Values;
+comboBox_NewLineCode2_Gallery.SelectedItem = NewLineCodes.CrLf;
+
+var newLineCode2 = NewLineCodesHelper.Cast(comboBox_NewLineCode2_Gallery.SelectedItem);
 ```
 
 ## Properties and Methods
@@ -78,3 +87,4 @@ var newLineEntities = NewLineCodesHelper.GetAllExtraProperties("Entity");
 - [[C#] 何故 enum に拘りたくなるのか？ | Moonmile Solutions Blog](http://www.moonmile.net/blog/archives/3666)
 - [c# - Localizing enum descriptions attributes - Stack Overflow](http://stackoverflow.com/questions/569298/)
 - [unit testing - .NET NUnit test - Assembly.GetEntryAssembly() is null - Stack Overflow](http://stackoverflow.com/questions/4337201/)
+- [c# - Data bind enum properties to grid and display description - Stack Overflow](http://stackoverflow.com/questions/1540103/)
