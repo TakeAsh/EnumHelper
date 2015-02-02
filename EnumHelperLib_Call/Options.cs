@@ -10,22 +10,24 @@ namespace EnumHelperLib_Call {
 
     public class Options {
 
+        [TypeConverter(typeof(EnumTypeConverter<NewLineCodes>))]
         public enum NewLineCodes {
             [ExtraProperties("Entity:'\n', Escaped:'\\x22\\u0027\t'")]
             Lf = 1,
 
             [ExtraProperties("Entity : \"\r\"Escaped : '\\x0027\\x0022'")]
-            [System.ComponentModel.Description("[A] Mac(CR)")]
+            [Description("[A] Mac(CR)")]
             Cr = 2,
 
             [ExtraProperties("Entity:\t'\r\n';;;Escaped:\t\"\\x3042\"")] // U+3042 あ
-            [System.ComponentModel.Description("[A] Windows(CR+LF)")]
+            [Description("[A] Windows(CR+LF)")]
             CrLf = 4,
 
             [ExtraProperties("Entity:\n\t'\n\r'\nEscaped:\n\t'\\uD842\\uDFB7'")] // U+00020BB7 𠮷
             LfCr = 8,
         }
 
+        [TypeConverter(typeof(EnumTypeConverter<Separators>))]
         public enum Separators {
             [Description("Tab(\\t)")]
             Tab,

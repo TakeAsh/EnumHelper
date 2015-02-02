@@ -36,7 +36,10 @@ namespace EnumHelperLib_Call {
             comboBox_Language_Gallery.SelectedValue = Thread.CurrentThread.CurrentCulture.Name;
             comboBox_NewLineCode_Gallery.SelectedValue = Options.NewLineCodes.CrLf;
             comboBox_Separator_Gallery.SelectedValue = Options.Separators.Tab;
+            comboBox_Separator2_GalleryCategory.ItemsSource = SeparatorsHelper.Values;
+            comboBox_Separator2_Gallery.SelectedItem = Options.Separators.Tab;
             comboBox_NewLineCode2.SelectedValue = Options.NewLineCodes.CrLf;
+            comboBox_NewLineCode3.SelectedItem = Options.NewLineCodes.CrLf;
         }
 
         private CultureInfo[] GetLocalizedResources() {
@@ -76,6 +79,11 @@ namespace EnumHelperLib_Call {
             comboBox_NewLineCode2.ItemsSource = NewLineCodesHelper.ValueDescriptionPairs;
             comboBox_NewLineCode2.SelectedValue = newLineCode2;
             comboBox_NewLineCode2.AdjustMaxItemWidth();
+            var newLineCode3 = NewLineCodesHelper.Cast(comboBox_NewLineCode3.SelectedItem);
+            comboBox_NewLineCode3.ItemsSource = null;
+            comboBox_NewLineCode3.ItemsSource = NewLineCodesHelper.Values;
+            comboBox_NewLineCode3.SelectedItem = newLineCode3;
+            comboBox_NewLineCode3.AdjustMaxItemWidth();
         }
 
         private void SetOption() {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Threading;
@@ -318,6 +319,28 @@ namespace EnumExtensionLib_Test {
             return isValid ?
                 dic[item] :
                 expected; // skip
+        }
+
+        [Test, TestCaseSource(typeof(ToDescription_TestCaseProvider), "AllTestCases")]
+        public string ConvertToString_Test(string culture, Options.NewLineCodes item, bool isValid, string expected) {
+            if (!String.IsNullOrEmpty(culture)) {
+                SetCurrentCulture(culture);
+            }
+            var converter = TypeDescriptor.GetConverter(typeof(Options.NewLineCodes));
+            Assert.NotNull(converter);
+            Assert.True(converter.CanConvertTo(typeof(string)));
+            return converter.ConvertToString(item);
+        }
+
+        [TestCase(Options.NewLineCodes.Lf, "Lf")]
+        [TestCase(Options.NewLineCodes.Cr, "Cr")]
+        [TestCase(Options.NewLineCodes.CrLf, "CrLf")]
+        [TestCase(Options.NewLineCodes.LfCr, "LfCr")]
+        [TestCase((Options.NewLineCodes)0, "0")]
+        [TestCase((Options.NewLineCodes)3, "3")]
+        [TestCase(default(Options.NewLineCodes), "0")]
+        public void ToString_Test(Options.NewLineCodes item, string expected) {
+            Assert.AreEqual(expected, item.ToString());
         }
 
         [TestCase(Options.NewLineCodes.Lf, "\n", "\"\'\t")]
