@@ -187,6 +187,19 @@ namespace TakeAsh {
         }
 
         /// <summary>
+        /// Returns the ExtraProperty value of a specific TEnum item
+        /// </summary>
+        /// <param name="en">TEnum item</param>
+        /// <param name="key">ExtraProperty key</param>
+        /// <returns>ExtraProperty value</returns>
+        static public string GetExtraProperty(TEnum en, string key) {
+            var extraPropertiesAttribute = AttributeHelper<ExtraPropertiesAttribute>.GetAttribute(en);
+            return extraPropertiesAttribute != null ?
+                extraPropertiesAttribute[key] :
+                null;
+        }
+
+        /// <summary>
         /// Returns the ExtraProperty values for all TEnum items
         /// </summary>
         /// <param name="key">ExtraProperty key</param>
@@ -194,7 +207,7 @@ namespace TakeAsh {
         static public string[] GetAllExtraProperties(string key) {
             var properties = new List<string>();
             foreach (var item in _values) {
-                properties.Add(_GetExtraProperty(item, key));
+                properties.Add(GetExtraProperty(item, key));
             }
             return properties.ToArray();
         }
@@ -321,19 +334,6 @@ namespace TakeAsh {
             return descriptionAttribute != null ?
                 descriptionAttribute.Description :
                 en.ToString();
-        }
-
-        /// <summary>
-        /// Returns the ExtraProperty value of a specific TEnum item
-        /// </summary>
-        /// <param name="en">TEnum item</param>
-        /// <param name="key">ExtraProperty key</param>
-        /// <returns>ExtraProperty value</returns>
-        static private string _GetExtraProperty(TEnum en, string key) {
-            var extraPropertiesAttribute = AttributeHelper<ExtraPropertiesAttribute>.GetAttribute(en);
-            return extraPropertiesAttribute != null ?
-                extraPropertiesAttribute[key] :
-                null;
         }
     }
 }

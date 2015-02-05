@@ -368,6 +368,31 @@ namespace EnumExtensionLib_Test {
             }
         }
 
+        [TestCase(Options.NewLineCodes.Lf, "\n", "\"\'\t")]
+        [TestCase(Options.NewLineCodes.Cr, "\r", "\'\"")]
+        [TestCase(Options.NewLineCodes.CrLf, "\r\n", "あ")]
+        [TestCase(Options.NewLineCodes.LfCr, "\n\r", "\uD842\uDFB7")]
+        [TestCase((Options.NewLineCodes)1, "\n", "\x22\u0027\x09")]
+        [TestCase((Options.NewLineCodes)2, "\r", "\u0027\x22")]
+        [TestCase((Options.NewLineCodes)4, "\r\n", "\u3042")]
+        [TestCase((Options.NewLineCodes)8, "\n\r", "\xD842\xDFB7")]
+        [TestCase((Options.NewLineCodes)0, null, null)]
+        [TestCase((Options.NewLineCodes)3, null, null)]
+        public void GetExtraPropertyGeneric_Test(Options.NewLineCodes item, string expectedEntity, string expectedEscaped) {
+            var actualEntity = NewLineCodeHelper.GetExtraProperty(item, "Entity");
+            if (expectedEntity != null) {
+                Assert.AreEqual(expectedEntity, actualEntity);
+            } else {
+                Assert.Null(actualEntity);
+            }
+            var actualEscaped = NewLineCodeHelper.GetExtraProperty(item, "Escaped");
+            if (expectedEscaped != null) {
+                Assert.AreEqual(expectedEscaped, actualEscaped);
+            } else {
+                Assert.Null(actualEscaped);
+            }
+        }
+
         [TestCase(Options.NewLineCodes.Lf, Options.NewLineCodes.Lf)]
         [TestCase(Options.NewLineCodes.Cr, Options.NewLineCodes.Cr)]
         [TestCase(Options.NewLineCodes.CrLf, Options.NewLineCodes.CrLf)]
