@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("EnumHelperLib_Call")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("TakeAsh.net")]
 [assembly: AssemblyProduct("EnumHelperLib_Call")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright © TakeAsh.net 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
