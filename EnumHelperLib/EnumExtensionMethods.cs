@@ -39,7 +39,7 @@ namespace TakeAsh {
             Assembly assembly;
             string[] resNames;
             ResourceManager resourceManager;
-            if ((assembly = Assembly.GetEntryAssembly()) == null ||
+            if ((assembly = Assembly.GetAssembly(en.GetType())) == null ||
                 (resNames = assembly.GetManifestResourceNames()) == null ||
                 resNames.Length == 0 ||
                 (resNames = resNames.Where(name => regPropertyResources.IsMatch(name)).ToArray()) == null ||
@@ -66,7 +66,7 @@ namespace TakeAsh {
         /// For debug
         /// </remarks>
         static public string GetAssemblyName(this Enum en) {
-            var assembly = Assembly.GetEntryAssembly();
+            var assembly = Assembly.GetAssembly(en.GetType());
             return assembly != null ?
                 assembly.GetName().Name :
                 null;

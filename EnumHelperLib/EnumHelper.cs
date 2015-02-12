@@ -298,7 +298,7 @@ namespace TakeAsh {
         /// For debug
         /// </remarks>
         static public string GetAssemblyName() {
-            var assembly = Assembly.GetEntryAssembly();
+            var assembly = Assembly.GetAssembly(typeof(TEnum));
             return assembly != null ?
                 assembly.GetName().Name :
                 null;
@@ -307,7 +307,7 @@ namespace TakeAsh {
         static private ResourceManager _GetResourceManager() {
             Assembly assembly;
             string[] resNames;
-            if ((assembly = Assembly.GetEntryAssembly()) == null ||
+            if ((assembly = Assembly.GetAssembly(typeof(TEnum))) == null ||
                 (resNames = assembly.GetManifestResourceNames()) == null ||
                 resNames.Length == 0 ||
                 (resNames = resNames.Where(name => regPropertyResources.IsMatch(name)).ToArray()) == null ||

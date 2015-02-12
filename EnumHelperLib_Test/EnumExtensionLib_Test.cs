@@ -41,7 +41,7 @@ namespace EnumExtensionLib_Test {
 
         [SetUp]
         public void setup() {
-            AssemblyUtilities.SetEntryAssembly(Assembly.GetAssembly(typeof(Options)));
+            //AssemblyUtilities.SetEntryAssembly(Assembly.GetAssembly(typeof(Options)));
         }
 
         private void SetCurrentCulture(string cultureName) {
