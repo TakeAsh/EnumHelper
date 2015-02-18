@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="AttributeHelper.cs" />
     <Compile Include="ComboBoxExtensionMethods.cs" />
+    <Compile Include="EnumEnumDictionary.cs" />
     <Compile Include="EnumExtensionMethods.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="EnumTypeConverter.cs" />

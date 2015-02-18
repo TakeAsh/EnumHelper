@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyUtilities.cs" />
+    <Compile Include="EnumEnumDictionary_Test.cs" />
     <Compile Include="EnumExtensionLib_Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
