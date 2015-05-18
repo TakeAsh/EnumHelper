@@ -71,7 +71,6 @@
     <Compile Include="EnumHelper.cs" />
     <Compile Include="EnumTypeConverter.cs" />
     <Compile Include="ExtraPropertiesAttribute.cs" />
-    <Compile Include="FlagHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

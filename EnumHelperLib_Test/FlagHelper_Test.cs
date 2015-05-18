@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -10,9 +11,9 @@ namespace EnumHelperLib_Test {
     [TestFixture]
     public class FlagHelper_Test {
 
-        const int WDayDigit = 2;
-
         [Flags]
+        [HexDigit(2)]
+        [TypeConverter(typeof(EnumTypeConverter<WDays>))]
         public enum WDays {
             None = 0x00,
             Sunday = 0x01,
@@ -22,6 +23,28 @@ namespace EnumHelperLib_Test {
             Thursday = 0x10,
             Friday = 0x20,
             Saturday = 0x40
+        }
+
+        private TypeConverter wDaysConverter = TypeDescriptor.GetConverter(typeof(WDays));
+
+        [TestCase(WDays.None, "00: None")]
+        [TestCase(WDays.Sunday, "01: Sunday")]
+        [TestCase(WDays.Monday, "02: Monday")]
+        [TestCase(WDays.Tuesday, "04: Tuesday")]
+        [TestCase(WDays.Wednesday, "08: Wednesday")]
+        [TestCase(WDays.Thursday, "10: Thursday")]
+        [TestCase(WDays.Friday, "20: Friday")]
+        [TestCase(WDays.Saturday, "40: Saturday")]
+        [TestCase(WDays.Sunday | WDays.Monday, "03: Sunday, Monday")]
+        [TestCase(WDays.Monday | WDays.Tuesday, "06: Monday, Tuesday")]
+        [TestCase(WDays.Tuesday | WDays.Wednesday, "0C: Tuesday, Wednesday")]
+        [TestCase(WDays.Wednesday | WDays.Thursday, "18: Wednesday, Thursday")]
+        [TestCase(WDays.Thursday | WDays.Friday, "30: Thursday, Friday")]
+        [TestCase(WDays.Friday | WDays.Saturday, "60: Friday, Saturday")]
+        [TestCase(WDays.Saturday | WDays.Sunday, "41: Sunday, Saturday")]
+        [TestCase(WDays.None | WDays.Sunday | WDays.Monday | WDays.Tuesday | WDays.Wednesday | WDays.Thursday | WDays.Friday | WDays.Saturday, "7F: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday")]
+        public void ToHexWithFlag_Test(WDays wday, string expect) {
+            Assert.AreEqual(expect, wday.ToHexWithFlag());
         }
 
         [TestCase(WDays.None, "00: None")]
@@ -40,9 +63,8 @@ namespace EnumHelperLib_Test {
         [TestCase(WDays.Friday | WDays.Saturday, "60: Friday, Saturday")]
         [TestCase(WDays.Saturday | WDays.Sunday, "41: Sunday, Saturday")]
         [TestCase(WDays.None | WDays.Sunday | WDays.Monday | WDays.Tuesday | WDays.Wednesday | WDays.Thursday | WDays.Friday | WDays.Saturday, "7F: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday")]
-        public void ConstructorFromFlag_Test(WDays wday, string expect) {
-            var actual = wday.ToFlag(WDayDigit);
-            Assert.AreEqual(expect, actual.ToString());
+        public void TypeConverter_Test(WDays wday, string expect) {
+            Assert.AreEqual(expect, wDaysConverter.ConvertToString(wday));
         }
 
         [TestCase(0x00, "00: None")]
@@ -61,9 +83,9 @@ namespace EnumHelperLib_Test {
         [TestCase(0x60, "60: Friday, Saturday")]
         [TestCase(0x41, "41: Sunday, Saturday")]
         [TestCase(0x7f, "7F: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday")]
-        public void ConstructorFromInt_Test(int wday, string expect) {
-            var actual = wday.ToFlag<WDays>(WDayDigit);
-            Assert.AreEqual(expect, actual.ToString());
+        public void ToFlag_Test(int wday, string expect) {
+            var actual = wday.ToFlag<WDays>();
+            Assert.AreEqual(expect, actual.ToHexWithFlag());
         }
     }
 }

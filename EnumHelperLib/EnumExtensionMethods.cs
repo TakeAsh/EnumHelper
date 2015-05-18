@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -102,6 +103,41 @@ namespace TakeAsh {
             return extraPropertiesAttribute != null ?
                 extraPropertiesAttribute[key] :
                 null;
+        }
+
+        static public string ToHexWithFlag(this Enum en) {
+            var enumType = en.GetType();
+            var attributes = enumType.GetCustomAttributes(typeof(HexDigitAttribute), false);
+            HexDigitAttribute hexDigit;
+            if (attributes == null ||
+                attributes.Length == 0 ||
+                (hexDigit = attributes[0] as HexDigitAttribute) == null ||
+                hexDigit.Digit <= 0) {
+                return en.ToDescription();
+            } else {
+                var flags = new List<string>();
+                var value = (Enum)Enum.ToObject(enumType, en);
+                foreach (Enum flag in Enum.GetValues(enumType)) {
+                    if (HasFlag(value, flag)) {
+                        flags.Add(flag.ToDescription());
+                    }
+                }
+                return Convert.ToInt32(value).ToString(hexDigit.Format) + ": " + String.Join(", ", flags);
+            }
+        }
+
+        static public bool HasFlag(Enum value, Enum flag) {
+            var valueInt = Convert.ToInt32(value);
+            var flagInt = Convert.ToInt32(flag);
+            return flagInt != 0 ?
+                (valueInt & flagInt) == flagInt :
+                valueInt == 0;
+        }
+
+        static public TEnum ToFlag<TEnum>(this int value)
+            where TEnum : struct, IConvertible {
+
+            return (TEnum)Enum.ToObject(typeof(TEnum), value);
         }
     }
 }

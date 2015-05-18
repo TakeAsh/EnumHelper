@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace TakeAsh {
@@ -24,9 +25,33 @@ namespace TakeAsh {
             Type destinationType
         ) {
             if (destinationType == typeof(string)) {
-                return EnumHelper<TEnum>.ToDescription((TEnum)value);
+                var attributes = typeof(TEnum).GetCustomAttributes(typeof(HexDigitAttribute), false);
+                HexDigitAttribute hexDigit;
+                if (attributes == null ||
+                    attributes.Length == 0 ||
+                    (hexDigit = attributes[0] as HexDigitAttribute) == null ||
+                    hexDigit.Digit <= 0) {
+                    return EnumHelper<TEnum>.ToDescription((TEnum)value);
+                } else {
+                    var flags = new List<string>();
+                    var valueEnum = (TEnum)Enum.ToObject(typeof(TEnum), value);
+                    foreach (var flag in EnumHelper<TEnum>.Values) {
+                        if (HasFlag(valueEnum, flag)) {
+                            flags.Add(EnumHelper<TEnum>.ToDescription(flag));
+                        }
+                    }
+                    return Convert.ToInt32(value).ToString(hexDigit.Format) + ": " + String.Join(", ", flags);
+                }
             }
             return base.ConvertTo(context, culture, value, destinationType);
+        }
+
+        public bool HasFlag(TEnum value, TEnum flag) {
+            var valueInt = Convert.ToInt32(value);
+            var flagInt = Convert.ToInt32(flag);
+            return flagInt != 0 ?
+                (valueInt & flagInt) == flagInt :
+                valueInt == 0;
         }
     }
 }
