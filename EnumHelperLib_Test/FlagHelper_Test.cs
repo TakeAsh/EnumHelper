@@ -84,7 +84,7 @@ namespace EnumHelperLib_Test {
         [TestCase(0x41, "41: Sunday, Saturday")]
         [TestCase(0x7f, "7F: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday")]
         public void ToFlag_Test(int wday, string expect) {
-            var actual = wday.ToFlag<WDays>();
+            var actual = wday.ToEnum<WDays>();
             Assert.AreEqual(expect, actual.ToHexWithFlag());
         }
     }
