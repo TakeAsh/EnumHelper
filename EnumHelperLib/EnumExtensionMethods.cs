@@ -134,6 +134,12 @@ namespace TakeAsh {
                 valueInt == 0;
         }
 
+        static public TEnum ToEnum<TEnum>(this int value)
+            where TEnum : struct, IConvertible {
+
+            return (TEnum)Enum.ToObject(typeof(TEnum), value);
+        }
+
         static public TEnum ToFlag<TEnum>(this int value)
             where TEnum : struct, IConvertible {
 
