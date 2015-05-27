@@ -105,6 +105,20 @@ namespace TakeAsh {
                 null;
         }
 
+        static public string ToHex(this Enum en) {
+            var enumType = en.GetType();
+            var attributes = enumType.GetCustomAttributes(typeof(HexDigitAttribute), false);
+            HexDigitAttribute hexDigit;
+            if (attributes == null ||
+                attributes.Length == 0 ||
+                (hexDigit = attributes[0] as HexDigitAttribute) == null ||
+                hexDigit.Digit <= 0) {
+                return en.ToDescription();
+            } else {
+                return Convert.ToInt32(en).ToString(hexDigit.Format);
+            }
+        }
+
         static public string ToHexWithFlag(this Enum en) {
             var enumType = en.GetType();
             var attributes = enumType.GetCustomAttributes(typeof(HexDigitAttribute), false);

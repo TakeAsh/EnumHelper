@@ -27,6 +27,26 @@ namespace EnumHelperLib_Test {
 
         private TypeConverter wDaysConverter = TypeDescriptor.GetConverter(typeof(WDays));
 
+        [TestCase(WDays.None, "00")]
+        [TestCase(WDays.Sunday, "01")]
+        [TestCase(WDays.Monday, "02")]
+        [TestCase(WDays.Tuesday, "04")]
+        [TestCase(WDays.Wednesday, "08")]
+        [TestCase(WDays.Thursday, "10")]
+        [TestCase(WDays.Friday, "20")]
+        [TestCase(WDays.Saturday, "40")]
+        [TestCase(WDays.Sunday | WDays.Monday, "03")]
+        [TestCase(WDays.Monday | WDays.Tuesday, "06")]
+        [TestCase(WDays.Tuesday | WDays.Wednesday, "0C")]
+        [TestCase(WDays.Wednesday | WDays.Thursday, "18")]
+        [TestCase(WDays.Thursday | WDays.Friday, "30")]
+        [TestCase(WDays.Friday | WDays.Saturday, "60")]
+        [TestCase(WDays.Saturday | WDays.Sunday, "41")]
+        [TestCase(WDays.None | WDays.Sunday | WDays.Monday | WDays.Tuesday | WDays.Wednesday | WDays.Thursday | WDays.Friday | WDays.Saturday, "7F")]
+        public void ToHex_Test(WDays wday, string expect) {
+            Assert.AreEqual(expect, wday.ToHex());
+        }
+
         [TestCase(WDays.None, "00: None")]
         [TestCase(WDays.Sunday, "01: Sunday")]
         [TestCase(WDays.Monday, "02: Monday")]
