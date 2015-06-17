@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Text.RegularExpressions;
 
 namespace TakeAsh {
 
@@ -19,9 +18,6 @@ namespace TakeAsh {
     /// </remarks>
     static public class EnumHelper<TEnum>
         where TEnum : struct, IConvertible {
-
-        static private Regex regPropertyResources = new Regex(@"\.Properties\.");
-        static private Regex regLastResources = new Regex(@"\.resources$");
 
         static private TEnum[] _values;
         static private string[] _names;
@@ -305,16 +301,15 @@ namespace TakeAsh {
         }
 
         static private ResourceManager _GetResourceManager() {
-            Assembly assembly;
-            string[] resNames;
-            if ((assembly = Assembly.GetAssembly(typeof(TEnum))) == null ||
-                (resNames = assembly.GetManifestResourceNames()) == null ||
-                resNames.Length == 0 ||
-                (resNames = resNames.Where(name => regPropertyResources.IsMatch(name)).ToArray()) == null ||
-                resNames.Length == 0) {
+            var assembly = Assembly.GetAssembly(typeof(TEnum));
+            if (assembly == null) {
                 return null;
             }
-            return new ResourceManager(regLastResources.Replace(resNames[0], ""), assembly);
+            var resourceName = assembly.GetName().Name + ".Properties.Resources";
+            if (!assembly.GetManifestResourceNames().Contains(resourceName + ".resources")) {
+                return null;
+            }
+            return new ResourceManager(resourceName, assembly);
         }
 
         /// <summary>
