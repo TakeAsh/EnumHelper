@@ -86,7 +86,7 @@ namespace TakeAsh {
         /// </list>
         /// </remarks>
         static private string _ToDescription(this Enum en) {
-            var descriptionAttribute = AttributeHelper<DescriptionAttribute>.GetAttribute(en);
+            var descriptionAttribute = en.GetAttribute<DescriptionAttribute>();
             return descriptionAttribute != null ?
                 descriptionAttribute.Description :
                 en.ToString();
@@ -99,7 +99,7 @@ namespace TakeAsh {
         /// <param name="key">key of ExtraPropertiesAttribute</param>
         /// <returns>value of ExtraPropertiesAttribute</returns>
         static public string GetExtraProperty(this Enum en, string key) {
-            var extraPropertiesAttribute = AttributeHelper<ExtraPropertiesAttribute>.GetAttribute(en);
+            var extraPropertiesAttribute = en.GetAttribute<ExtraPropertiesAttribute>();
             return extraPropertiesAttribute != null ?
                 extraPropertiesAttribute[key] :
                 null;
@@ -146,6 +146,31 @@ namespace TakeAsh {
             return flagInt != 0 ?
                 (valueInt & flagInt) == flagInt :
                 valueInt == 0;
+        }
+
+        static public TAttr[] GetAttributes<TAttr>(this Enum en)
+            where TAttr : Attribute {
+
+            var memInfos = en.GetType()
+                .GetMember(en.ToString());
+            if (memInfos == null || memInfos.Length == 0) {
+                return null;
+            }
+            var attrs = memInfos.First()
+                .GetCustomAttributes(typeof(TAttr), false) as TAttr[];
+            if (attrs == null || attrs.Length == 0) {
+                return null;
+            }
+            return attrs;
+        }
+
+        static public TAttr GetAttribute<TAttr>(this Enum en)
+            where TAttr : Attribute {
+
+            var attr = en.GetAttributes<TAttr>();
+            return attr == null ?
+                null :
+                attr.FirstOrDefault();
         }
 
         static public TEnum ToEnum<TEnum>(this int value)

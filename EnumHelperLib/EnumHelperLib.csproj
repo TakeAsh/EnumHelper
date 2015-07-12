@@ -64,7 +64,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeHelper.cs" />
     <Compile Include="ComboBoxExtensionMethods.cs" />
     <Compile Include="EnumEnumDictionary.cs" />
     <Compile Include="EnumExtensionMethods.cs" />

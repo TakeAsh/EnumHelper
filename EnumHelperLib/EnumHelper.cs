@@ -182,6 +182,31 @@ namespace TakeAsh {
             }
         }
 
+        static public TAttr[] GetAttributes<TAttr>(TEnum en)
+            where TAttr : Attribute {
+
+            var memInfos = en.GetType()
+                .GetMember(en.ToString());
+            if (memInfos == null || memInfos.Length == 0) {
+                return null;
+            }
+            var attrs = memInfos.First()
+                .GetCustomAttributes(typeof(TAttr), false) as TAttr[];
+            if (attrs == null || attrs.Length == 0) {
+                return null;
+            }
+            return attrs;
+        }
+
+        static public TAttr GetAttribute<TAttr>(TEnum en, bool inherit = false)
+            where TAttr : Attribute {
+
+            var attr = GetAttributes<TAttr>(en);
+            return attr == null ?
+                null :
+                attr.FirstOrDefault();
+        }
+
         /// <summary>
         /// Returns the ExtraProperty value of a specific TEnum item
         /// </summary>
@@ -189,7 +214,7 @@ namespace TakeAsh {
         /// <param name="key">ExtraProperty key</param>
         /// <returns>ExtraProperty value</returns>
         static public string GetExtraProperty(TEnum en, string key) {
-            var extraPropertiesAttribute = AttributeHelper<ExtraPropertiesAttribute>.GetAttribute(en);
+            var extraPropertiesAttribute = GetAttribute<ExtraPropertiesAttribute>(en);
             return extraPropertiesAttribute != null ?
                 extraPropertiesAttribute[key] :
                 null;
@@ -325,7 +350,7 @@ namespace TakeAsh {
         /// </list>
         /// </remarks>
         static private string _ToDescription(TEnum en) {
-            var descriptionAttribute = AttributeHelper<DescriptionAttribute>.GetAttribute(en);
+            var descriptionAttribute = GetAttribute<DescriptionAttribute>(en);
             return descriptionAttribute != null ?
                 descriptionAttribute.Description :
                 en.ToString();
