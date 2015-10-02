@@ -89,6 +89,13 @@ namespace TakeAsh {
         }
 
         /// <summary>
+        /// Count of TEnum item
+        /// </summary>
+        static public int Count {
+            get { return _names.Length; }
+        }
+
+        /// <summary>
         /// Initialize cache
         /// </summary>
         /// <remarks>
