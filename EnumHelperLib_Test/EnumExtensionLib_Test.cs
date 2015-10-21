@@ -403,5 +403,58 @@ namespace EnumExtensionLib_Test {
         public void Cast_Test(object item, Options.NewLineCodes expected) {
             Assert.AreEqual(expected, NewLineCodeHelper.Cast(item));
         }
+
+        [TestCase(BkBRMGCYW.Black, "Bk", ColorGroups.Undefined)]
+        [TestCase(BkBRMGCYW.Blue, "B", ColorGroups.Primary)]
+        [TestCase(BkBRMGCYW.Red, "R", ColorGroups.Primary)]
+        [TestCase(BkBRMGCYW.Magenta, "M", ColorGroups.Secondary)]
+        [TestCase(BkBRMGCYW.Green, "G", ColorGroups.Primary)]
+        [TestCase(BkBRMGCYW.Cyan, "C", ColorGroups.Secondary)]
+        [TestCase(BkBRMGCYW.Yellow, "Y", ColorGroups.Secondary)]
+        [TestCase(BkBRMGCYW.White, "White", ColorGroups.Other)]
+        public void BkBRMGCYW_Test(BkBRMGCYW input, string expectedShortName, ColorGroups expectedGroup) {
+            Assert.AreEqual(expectedShortName, input.ToShortName());
+            Assert.AreEqual(expectedGroup, input.ToGroup());
+        }
+    }
+
+    public enum BkBRMGCYW {
+        [ExtraProperties("ShortName:'Bk'")]
+        Black,
+        [ExtraProperties("ShortName:'B', Group:'Primary'")]
+        Blue,
+        [ExtraProperties("ShortName:'R', Group:'Primary'")]
+        Red,
+        [ExtraProperties("ShortName:'M', Group:'Secondary'")]
+        Magenta,
+        [ExtraProperties("ShortName:'G', Group:'Primary'")]
+        Green,
+        [ExtraProperties("ShortName:'C', Group:'Secondary'")]
+        Cyan,
+        [ExtraProperties("ShortName:'Y', Group:'Secondary'")]
+        Yellow,
+        [ExtraProperties("Group:'Other'")]
+        White,
+    }
+
+    public enum ColorGroups {
+        Undefined,
+        Primary,
+        Secondary,
+        Other,
+    }
+
+    public static class BkBRMGCYWExtensionMethods {
+
+        public static string ToShortName(this BkBRMGCYW en) {
+            return en.GetExtraProperty("ShortName") ?? en.ToString();
+        }
+
+        public static ColorGroups ToGroup(this BkBRMGCYW en) {
+            ColorGroups value;
+            return Enum.TryParse<ColorGroups>(en.GetExtraProperty("Group"), out value) ?
+                value :
+                default(ColorGroups);
+        }
     }
 }
