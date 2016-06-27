@@ -99,7 +99,7 @@ namespace TakeAsh {
         /// <param name="key">key of ExtraPropertiesAttribute</param>
         /// <returns>value of ExtraPropertiesAttribute</returns>
         static public string GetExtraProperty(this Enum en, string key) {
-            var extraPropertiesAttribute = en.GetAttribute<ExtraPropertiesAttribute>();
+            var extraPropertiesAttribute = en.GetAttribute<ExtraPropertiesAttribute>(attr => attr.ContainsKey(key));
             return extraPropertiesAttribute != null ?
                 extraPropertiesAttribute[key] :
                 null;
@@ -164,13 +164,13 @@ namespace TakeAsh {
             return attrs;
         }
 
-        static public TAttr GetAttribute<TAttr>(this Enum en)
+        static public TAttr GetAttribute<TAttr>(this Enum en, Func<TAttr, bool> predicate = null)
             where TAttr : Attribute {
 
             var attr = en.GetAttributes<TAttr>();
-            return attr == null ?
-                null :
-                attr.FirstOrDefault();
+            return attr == null ? null :
+                predicate == null ? attr.FirstOrDefault() :
+                attr.FirstOrDefault(predicate);
         }
 
         static public TEnum ToEnum<TEnum>(this int value)

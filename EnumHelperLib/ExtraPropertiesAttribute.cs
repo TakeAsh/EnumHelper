@@ -7,6 +7,7 @@ namespace TakeAsh {
     /// <summary>
     /// Attaches Dictionary&lt;string, string&gt; to an object.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
     public class ExtraPropertiesAttribute : Attribute {
 
         static Regex regKeyValuePair =
@@ -63,6 +64,10 @@ namespace TakeAsh {
                 }
                 _extraProperties[key] = value;
             }
+        }
+
+        public bool ContainsKey(string key) {
+            return _extraProperties.ContainsKey(key);
         }
     }
 }
