@@ -70,7 +70,6 @@
     <Compile Include="EnumEnumDictionary.cs" />
     <Compile Include="EnumExtensionMethods.cs" />
     <Compile Include="EnumHelper.cs" />
-    <Compile Include="EnumTypeConverter.cs" />
     <Compile Include="ExtraPropertiesAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
